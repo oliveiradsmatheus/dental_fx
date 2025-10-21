@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox prefHeight="768.0" prefWidth="1024.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.ProcedimentoTableController">
+    <children>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1024.0" spacing="36.0">
+            <children>
+                <TextField fx:id="tf_pesquisa" onKeyTyped="#onPesquisar" prefWidth="867.0" promptText="Informe o procedimento" />
+                <Button mnemonicParsing="false" onAction="#onNovoProcedimento" text="+" />
+            </children>
+        </HBox>
+
+        <TableView fx:id="table_view" prefHeight="568.0" prefWidth="1024.0">
+            <columns>
+                <TableColumn fx:id="col_id" maxWidth="50.0" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="col_desc" prefWidth="75.0" text="DESCRIÇÃO" />
+                <TableColumn fx:id="col_tempo" maxWidth="100.0" prefWidth="100.0" text="TEMPO" />
+                <TableColumn fx:id="col_valor" maxWidth="120.0" prefWidth="120.0" text="VALOR R$" />
+            </columns>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onAlterar" text="Alterar" />
+                        <MenuItem mnemonicParsing="false" onAction="#onApagar" text="Apagar" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </TableView>
+
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1024.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#onFechar" text="Fechar" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

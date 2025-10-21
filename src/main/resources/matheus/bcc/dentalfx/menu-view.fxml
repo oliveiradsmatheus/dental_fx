@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane prefHeight="768.0" prefWidth="1024.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.MenuController">
+    <top>
+        <MenuBar prefWidth="1024.0" BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="_Cadastros">
+                    <items>
+                        <MenuItem onAction="#onMaterial" text="_Material" />
+                        <MenuItem onAction="#onProcedimento" text="_Procedimento" />
+                        <MenuItem onAction="#onUsuario" text="_Usuario" />
+                        <MenuItem onAction="#onDentista" text="_Dentista" />
+                        <MenuItem onAction="#onPaciente" text="_Paciente" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+</BorderPane>

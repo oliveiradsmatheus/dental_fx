@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox prefHeight="416.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.UsuarioFormController">
+    <children>
+        <VBox VBox.vgrow="ALWAYS">
+            <children>
+                <Label text="ID">
+                    <VBox.margin>
+                        <Insets top="8.0" />
+                    </VBox.margin>
+                </Label>
+                <TextField fx:id="tf_id" editable="false" />
+                <Label layoutX="10.0" layoutY="10.0" text="Nome">
+                    <VBox.margin>
+                        <Insets top="8.0" />
+                    </VBox.margin>
+                </Label>
+                <TextField fx:id="tf_nome" layoutX="10.0" layoutY="27.0" />
+                <Label layoutX="10.0" layoutY="52.0" text="Nivel">
+                    <VBox.margin>
+                        <Insets top="8.0" />
+                    </VBox.margin>
+                </Label>
+                <TextField fx:id="tf_nivel" layoutX="10.0" layoutY="69.0" />
+                <Label layoutX="10.0" layoutY="630.0" text="Senha" />
+                <TextField fx:id="tf_senha" layoutX="10.0" layoutY="659.0" />
+            </children>
+            <VBox.margin>
+                <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+            </VBox.margin>
+        </VBox>
+        <HBox alignment="CENTER" maxHeight="106.0" prefHeight="86.0" prefWidth="768.0" spacing="48.0">
+            <children>
+                <Button fx:id="bt_confirmar" mnemonicParsing="false" onAction="#onConfirmar" prefHeight="33.0" prefWidth="132.0" text="Confirmar" />
+                <Button fx:id="bt_cancelar" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCancelar" prefHeight="33.0" prefWidth="132.0" text="Cancelar" />
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="12.0" right="12.0" top="12.0" />
+    </padding>
+</VBox>
