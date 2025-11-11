@@ -61,7 +61,6 @@ public class Conexao {
         }
         catch (SQLException sqlex) {
             erro = "Erro: " + sqlex;
-            //rs = null;
         }
         return rs;
     }

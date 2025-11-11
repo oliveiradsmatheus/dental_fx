@@ -1,0 +1,77 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="rel_materiais" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a432e6b2-ecbc-4e32-a3d9-a785a58ca1c4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (2)"/>
+	<query language="SQL"><![CDATA[SELECT * FROM material ORDER BY mat_desc]]></query>
+	<field name="mat_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="mat_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="mat_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="material"/>
+	</field>
+	<field name="mat_desc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mat_desc"/>
+		<property name="com.jaspersoft.studio.field.label" value="mat_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="material"/>
+	</field>
+	<field name="mat_preco" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="mat_preco"/>
+		<property name="com.jaspersoft.studio.field.label" value="mat_preco"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="material"/>
+	</field>
+	<background/>
+	<title height="72">
+		<element kind="frame" uuid="a3f1cc0f-25ff-4fe5-9e05-08eb5732bea3" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699">
+			<element kind="staticText" uuid="d5bbcc28-1094-4591-b237-45b060b71d64" x="20" y="20" width="234" height="43" forecolor="#FFFFFF" fontName="Liberation Sans" fontSize="34.0" bold="true">
+				<text><![CDATA[DentalFX]]></text>
+			</element>
+			<element kind="staticText" uuid="69bafa08-31ef-4207-9fd0-359b22eac218" x="395" y="43" width="180" height="20" forecolor="#FFFFFF" fontSize="14.0" bold="false" hTextAlign="Right">
+				<text><![CDATA[Relatório de materiais]]></text>
+			</element>
+		</element>
+	</title>
+	<pageHeader height="13"/>
+	<columnHeader height="21">
+		<element kind="line" uuid="e54cbabc-71e6-4d7d-a89a-24003633f36f" x="-20" y="20" width="595" height="1" forecolor="#666666"/>
+		<element kind="staticText" uuid="80185a65-0fd2-4f5e-a5bf-9ca3526a7197" mode="Opaque" x="0" y="0" width="80" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[ID]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2b1cf8c4-43ea-4d07-9145-800e42c33b9c"/>
+		</element>
+		<element kind="staticText" uuid="120dbf76-7f1b-4659-b114-d8a01508a3a6" mode="Opaque" x="80" y="0" width="360" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Left">
+			<text><![CDATA[Descrição]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="df3d345b-a68b-4eec-83f6-cf6442624467"/>
+		</element>
+		<element kind="staticText" uuid="9cefb575-8dbd-4e92-989c-70b9a8df5978" mode="Opaque" x="440" y="0" width="115" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Preço]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a5d19f4-43a7-4c0c-a4bd-8ca5f6436d85"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<element kind="textField" uuid="69fe080d-4fcb-4089-829b-44731547bcbd" x="0" y="0" width="80" height="20" fontSize="14.0" textAdjust="StretchHeight" hTextAlign="Center">
+				<expression><![CDATA[$F{mat_id}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2b1cf8c4-43ea-4d07-9145-800e42c33b9c"/>
+			</element>
+			<element kind="textField" uuid="29a45f84-ef51-4853-96f4-646d2fa76ef6" x="80" y="0" width="360" height="20" fontSize="14.0" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{mat_desc}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="df3d345b-a68b-4eec-83f6-cf6442624467"/>
+			</element>
+			<element kind="textField" uuid="42c0fec5-2468-4f38-b070-978e82c8ecff" x="440" y="0" width="115" height="20" fontSize="14.0" textAdjust="StretchHeight" pattern="¤ #,##0.00" hTextAlign="Center">
+				<expression><![CDATA[$F{mat_preco}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a5d19f4-43a7-4c0c-a4bd-8ca5f6436d85"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter/>
+	<pageFooter height="17">
+		<element kind="textField" uuid="ded1cc74-7704-43d1-8351-18f5532fb94a" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" fontName="Liberation Sans" hTextAlign="Right">
+			<expression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></expression>
+		</element>
+		<element kind="textField" uuid="c97085c3-863e-44f7-919a-aae3bcfd0aac" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" fontName="Liberation Sans" evaluationTime="Report">
+			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="511fbd48-ddba-4b2c-a405-bfca8b1e7ed7" x="0" y="4" width="280" height="13" fontName="Liberation Sans" pattern="EEEE, dd 'de' MMMM 'de' yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+	<summary/>
+</jasperReport>

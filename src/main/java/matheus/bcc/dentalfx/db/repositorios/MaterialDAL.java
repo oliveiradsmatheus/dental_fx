@@ -3,7 +3,7 @@ package matheus.bcc.dentalfx.db.repositorios;
 import matheus.bcc.dentalfx.db.entidades.Material;
 import matheus.bcc.dentalfx.db.util.IDAL;
 import matheus.bcc.dentalfx.db.util.SingletonDB;
-import matheus.bcc.dentalfx.util.Erro;
+import matheus.bcc.dentalfx.util.Alerta;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class MaterialDAL implements IDAL<Material> {
                 material = new Material(rs.getInt("mat_id"), rs.getString("mat_desc"), rs.getDouble("mat_preco"));
             rs.close();
         } catch(Exception e) {
-            Erro.exibir("Erro: " + e.getMessage());
+            Alerta.exibirErro("Erro", e.getMessage());
         }
         return material;
     }
@@ -60,7 +60,7 @@ public class MaterialDAL implements IDAL<Material> {
                 materialList.add(new Material(rs.getInt("mat_id"), rs.getString("mat_desc"), rs.getDouble("mat_preco")));
             rs.close();
         } catch (Exception e) {
-            Erro.exibir("Erro: " + e.getMessage());
+            Alerta.exibirErro("Erro", e.getMessage());
         }
         return materialList;
     }

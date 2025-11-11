@@ -73,7 +73,8 @@
     background-color: #1A1A1A;
     -fx-min-height: 25;
     min-height: 25;
-    -fx-pref-height: 25;
+    -fx-pref-height: 35;
+    -fx-font-size: 18;
 }
 .combo-box .list-cell:selected {
     -fx-background-color: #1A1A1A;
@@ -158,7 +159,8 @@
     background-color: #1A1A1A;
     -fx-min-height: 18;
     min-height: 18;
-    -fx-pref-height: 18;
+    -fx-pref-height: 35;
+    -fx-font-size: 16;
     -fx-padding: 0 0 0 3;
     padding: 0 0 0 3;
 }
@@ -313,6 +315,7 @@
     -fx-highlight-fill: #4e4e4e;
     -fx-background-color: #1A1A1A;
     background-color: #1A1A1A;
+    -fx-font-size: 16;
 }
 .text-area:hover {
     -fx-border-color: #3E3E40;
@@ -394,6 +397,7 @@
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
     -fx-border-width: 0;
+    -fx-pref-height: 35;
     border-width: 0;
 }
 .menu-bar .menu-button {
@@ -402,7 +406,7 @@
     -fx-text-fill: #AFB1B3;
     -fx-min-height: 20;
     min-height: 20;
-    -fx-pref-height: 30;
+    -fx-pref-height: 35;
     -fx-padding: 0 5 0 5;
     padding: 0 5 0 5;
     -fx-cursor: HAND;
@@ -730,4 +734,112 @@
     -fx-text-fill: #AFB1B3;
     -fx-padding: 5;
     padding: 5;
+}
+
+
+/* DatePicker */
+.date-picker {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #222222;
+    -fx-border-width: 1;
+    -fx-background-radius: 0;
+    -fx-text-fill: #AFB1B3;
+}
+
+.date-picker:hover {
+    -fx-background-color: #3E3E40;
+}
+
+.date-picker:focused {
+    -fx-border-color: #4e4e4e;
+}
+
+/* Campo de texto interno */
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #AFB1B3;
+    -fx-font-size: 16;
+}
+
+/* Botão do calendário */
+.date-picker > .arrow-button {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #222222;
+    -fx-border-width: 0 0 0 1;
+    -fx-cursor: hand;
+}
+.date-picker > .arrow-button:hover {
+    -fx-background-color: #3E3E40;
+}
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #AFB1B3;
+}
+
+/* POPUP do calendário */
+.date-picker-popup {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #222222;
+}
+
+.date-picker-popup > * {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #AFB1B3;
+}
+
+/* Células do calendário */
+.date-picker-popup .day-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #AFB1B3;
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #3E3E40;
+}
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #4e4e4e;
+}
+
+
+/* DatePicker PopUp */
+
+/* Fundo geral */
+.date-picker-popup {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #2E2E2E;
+}
+
+/* Cabeçalho com mês e ano */
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #2E2E2E;
+    -fx-text-fill: #AFB1B3;
+}
+
+/* Cabeçalho dos dias da semana */
+.date-picker-popup .day-name-cell {
+    -fx-background-color: #2E2E2E;
+    -fx-text-fill: #AFB1B3;
+    -fx-font-weight: bold;
+}
+
+/* Células do calendário (dias) */
+.date-picker-popup .day-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #AFB1B3;
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #3E3E40;
+}
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #4e4e4e;
+    -fx-text-fill: white;
+}
+
+/* Coluna de número das semanas */
+.date-picker-popup .week-number-cell {
+    -fx-background-color: #2E2E2E;
+    -fx-text-fill: #808080;
+}
+
+/* Grade */
+.date-picker-popup .calendar-grid {
+    -fx-border-color: #2E2E2E;
 }

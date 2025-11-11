@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox prefHeight="768.0" prefWidth="1024.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.UsuarioTableController">
+<VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.UsuarioTableController">
     <children>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1024.0" spacing="36.0">
             <children>
@@ -16,7 +16,7 @@
         <TableView fx:id="table_view" prefHeight="568.0" prefWidth="1024.0">
             <columns>
                 <TableColumn fx:id="col_id" maxWidth="50.0" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="col_nome" prefWidth="75.0" text="NOME" />
+                <TableColumn fx:id="col_nome" prefWidth="75.0" text="NOME DE USUÁRIO" />
                 <TableColumn fx:id="col_nivel" maxWidth="150.0" prefWidth="150.0" text="NIVEL" />
             </columns>
             <VBox.margin>

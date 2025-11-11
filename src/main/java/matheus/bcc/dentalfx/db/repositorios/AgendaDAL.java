@@ -2,7 +2,7 @@ package matheus.bcc.dentalfx.db.repositorios;
 
 import matheus.bcc.dentalfx.db.entidades.*;
 import matheus.bcc.dentalfx.db.util.SingletonDB;
-import matheus.bcc.dentalfx.util.Erro;
+import matheus.bcc.dentalfx.util.Alerta;
 
 import java.sql.ResultSet;
 import java.time.LocalDate;
@@ -33,15 +33,53 @@ public class AgendaDAL {
                 agenda.setHorario(sequencia, horario);
             }
         } catch (Exception e) {
-            Erro.exibir("Erro: " + e.getMessage());
+            Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
         }
         return agenda;
     }
 
-    boolean salvarAgenda(Agenda agenda) {
-        // Apagar todos os procedimentos e materiais marcados nas consultas da agenda de um determinado dentista em uma determinada data.
-        // Apagar todas as consultas marcadas na data da agenda "agenda.getData()" de um determinado dentista "agenda.getDentista()".
-        // Criar as consultas, materiais utilizados (tabela cons_mat) e procedimentos (tabela cons_prod).
-        return false;
+    public boolean salvarAgenda(Agenda agenda) {
+        boolean resultado = true;
+        String sql = "SELECT con_id FROM consulta WHERE con_data = '#1' AND den_id = #2 AND con_horario = #3";
+        sql = sql.replace("#1", agenda.getData().toString());
+        sql = sql.replace("#2", "" + agenda.getDentista().getId());
+        try {
+            for (Horario horario : agenda.getHorarioList()) {
+                int id = -1; // Atribui id inexistente para consulta no banco
+                sql = sql.replace("#3", "" + horario.getSequencia());
+                ResultSet rs = SingletonDB.getConexao().consultar(sql);
+                if (rs.next()) // Já está no banco
+                    id = rs.getInt("con_id"); // Se existe no banco, resgata o id
+                if (horario.getPaciente() != null) { // Existe no banco e no objeto, mas pode ter havido alguma alteração.
+                    Atendimento atendimento = horario.getAtendimento();
+                    boolean efetivado = false;
+                    if (id == -1) {
+                        // Não existe no banco, dou insert e marco como efetivado true;
+                    } else {
+                        // Se  existe, altero
+                    }
+
+                    if (efetivado) { // se tudo correu bem, adicionar materiais
+                        // deletar materiais e procedimentos antigos
+                        // inserir materiais e procedimentos novos
+                    }
+
+                } else { // Se existe no banco mas não existe no objeto, foi um cancelamento
+                    /*if (id != -1) {
+                        resultado &= SingletonDB.getConexao().manipular("DELETE FROM cons_mat WHERE con_id = " + id);
+                        resultado &= SingletonDB.getConexao().manipular("DELETE FROM cons_proc WHERE con_id = " + id);
+                        resultado &= SingletonDB.getConexao().manipular("DELETE FROM consulta WHERE con_id = " + id);
+                    }*/
+                }
+            }
+        } catch (Exception e) {
+            Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    public boolean efetivarConsulta(Dentista dentista, LocalDate data) {
+        return true;
     }
 }

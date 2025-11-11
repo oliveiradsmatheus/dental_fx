@@ -18,6 +18,14 @@ public class Atendimento {
         procedimentoList = new ArrayList<>();
     }
 
+    public List<MatItem> getMaterialList() {
+        return materialList;
+    }
+
+    public List<ProcItem> getProcedimentoList() {
+        return procedimentoList;
+    }
+
     public boolean addMaterial(int quantidade, Material material) {
         return materialList.add(new MatItem(material,quantidade));
     }

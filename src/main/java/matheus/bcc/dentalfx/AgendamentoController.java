@@ -6,56 +6,67 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import matheus.bcc.dentalfx.db.entidades.Agenda;
-import matheus.bcc.dentalfx.db.entidades.Dentista;
-import matheus.bcc.dentalfx.db.entidades.Horario;
-import matheus.bcc.dentalfx.db.entidades.Pessoa;
+import matheus.bcc.dentalfx.db.entidades.*;
 import matheus.bcc.dentalfx.db.repositorios.AgendaDAL;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
+import matheus.bcc.dentalfx.db.util.Banco;
 import matheus.bcc.dentalfx.util.*;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AgendamentoTableController implements Initializable {
+public class AgendamentoController implements Initializable {
     public DatePicker dp_dia_consulta;
     public ComboBox<Pessoa> cb_dentista;
     public TableView table_view;
     public TableColumn<Horario, String> col_hora;
     public TableColumn<Horario, String> col_paciente;
-
-    public static int indice;
-    public static Dentista dentista;
-    public static LocalDate data;
+    public MenuItem menu_item_usuario;
+    public Menu menu_relatorios;
+    public Menu menu_sistema;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Usuario usuario = Sessao.getInstancia().getUsuario();
+        if (usuario.getNivel() != 1)
+            esconderRecursosAdmin();
+        configurarCalendario();
         configurarCB();
         configurarTabela();
         dp_dia_consulta.setValue(LocalDate.now());
     }
 
     public void onPaciente(ActionEvent actionEvent) {
-        GerenciadorTelas.carregar(new Stage(), Constantes.GERENCIAMENTO_PACIENTES, "Gerenciamento de Pacientes", "icone", true);
+        GerenciadorTelas.carregar(new Stage(), Constantes.TABELA_PACIENTE, "Gerenciamento de Pacientes", "icone", true);
     }
 
-    public void onMedico(ActionEvent actionEvent) {
-        GerenciadorTelas.carregar(new Stage(), Constantes.GERANCIAMENTO_DENTISTAS, "Gerenciamento de Dentistas", "icone", true);
+    public void onDentista(ActionEvent actionEvent) {
+        GerenciadorTelas.carregar(new Stage(), Constantes.TABELA_DENTISTA, "Gerenciamento de Dentistas", "icone", true);
+        configurarCB();
+    }
+
+    public void onUsuario(ActionEvent actionEvent) {
+        GerenciadorTelas.carregar(new Stage(), Constantes.TABELA_USUARIO, "Gerenciamento de Usuários", "icone", true);
     }
 
     public void onMaterial(ActionEvent actionEvent) {
-        GerenciadorTelas.carregar(new Stage(), Constantes.GERENCIAMENTO_MATERIAIS, "Gerenciamento de Material", "icone", true);
+        GerenciadorTelas.carregar(new Stage(), Constantes.TABELA_MATERIAL, "Gerenciamento de Material", "icone", true);
     }
 
     public void onProcedimento(ActionEvent actionEvent) {
-        GerenciadorTelas.carregar(new Stage(), Constantes.GERENCIAMENTO_PROCEDIMENTOS, "Gerenciamento de Procedimentos", "icone", true);
+        GerenciadorTelas.carregar(new Stage(), Constantes.TABELA_PROCEDIMENTO, "Gerenciamento de Procedimentos", "icone", true);
+    }
+
+    public void onSobre(ActionEvent actionEvent) {
+        Sobre.exibir("Sobre o aplicativo DentalFX");
     }
 
     public void onTrocouData(ActionEvent actionEvent) {
         if (dp_dia_consulta.getValue().isBefore(LocalDate.now())) {
-            Erro.exibir("Erro", "Por favor, selecione uma data válida!");
+            Alerta.exibirErro("Erro", "Por favor, selecione uma data válida!");
             dp_dia_consulta.setValue(LocalDate.now());
         } else
             carregarTabela();
@@ -67,57 +78,51 @@ public class AgendamentoTableController implements Initializable {
 
     public void onAgendar(ActionEvent actionEvent) {
         Horario horario = (Horario) table_view.getSelectionModel().getSelectedItem();
-        IO.println(table_view.getSelectionModel().getSelectedIndex());
 
         if (horario == null)
-            Erro.exibir("Erro", "Selecione um horario");
+            Alerta.exibirErro("Erro", "Selecione um horario");
         else if (horario.getPaciente() != null)
-            Erro.exibir("Erro", "Horário indisponível");
+            Alerta.exibirErro("Erro", "Horário indisponível");
         else {
-            indice = table_view.getSelectionModel().getSelectedIndex();
-            dentista = (Dentista) cb_dentista.getValue();
-            data = dp_dia_consulta.getValue();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_AGENDAMENTO, "Agendar Consulta", "icone", true);
-            indice = -1;
-            dentista = null;
-            data = null;
+            int indice = table_view.getSelectionModel().getSelectedIndex();
+            Dentista dentista = (Dentista) cb_dentista.getValue();
+            LocalDate data = dp_dia_consulta.getValue();
+
+            GerenciadorTelas.carregar(
+                    new Stage(),
+                    Constantes.FORM_AGENDAMENTO,
+                    "Agendar Consulta", "icone",
+                    true,
+                    (AgendamentoFormController controller) -> controller.carregarDados(indice, dentista, data)
+            );
         }
     }
 
     public void onCancelarAgendamento(ActionEvent actionEvent) {
-        if (Confirmacao.exibir("testess","teste"))
-            Erro.exibir("", "Confirmado");
+        if (Alerta.exibirConfirmacao("testess","teste"))
+            Alerta.exibirErro("", "Confirmado");
         else
-            Erro.exibir("", "Não Confirmado");
+            Alerta.exibirErro("", "Não Confirmado");
+    }
+
+    private void configurarCalendario() {
+        dp_dia_consulta.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
     }
 
     private void configurarCB() {
         PessoaDAL pessoaDAL = new PessoaDAL();
         List<Pessoa> dentistas = pessoaDAL.get("", new Dentista());
-        cb_dentista.setItems(FXCollections.observableList(dentistas));
-        cb_dentista.setPromptText("Selecione um dentista");
-
-        cb_dentista.setCellFactory(p -> new ListCell<>() {
-            @Override
-            protected void updateItem(Pessoa item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null)
-                    setText(null);
-                else
-                    setText(item.getNome());
-            }
-        });
-
-        cb_dentista.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Pessoa item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null)
-                    setText(null);
-                else
-                    setText(item.getNome());
-            }
-        });
+        dentistas.sort(Comparator.comparing(Pessoa::getNome));
+        FXUtils.configurarComboBox(cb_dentista, dentistas, "Selecione um dentista", Pessoa::getNome);
     }
 
     private void configurarTabela() {
@@ -157,5 +162,53 @@ public class AgendamentoTableController implements Initializable {
 
     public void onTrocarTema(ActionEvent actionEvent) {
         GerenciadorTemas.trocarTema();
+    }
+
+    public void onRelMaterial(ActionEvent actionEvent) {
+        GeradorRelatorios.gerarRelatorio("SELECT * FROM material ORDER BY mat_desc", "rel_materiais.jasper","Relação de materiais");
+    }
+
+    public void onRelProcedimento(ActionEvent actionEvent) {
+        GeradorRelatorios.gerarRelatorio("SELECT * FROM procedimento ORDER BY pro_desc", "rel_procedimentos.jasper","Relação de pacientes");
+    }
+
+    public void onRelPacientes(ActionEvent actionEvent) {
+        GeradorRelatorios.gerarRelatorio("SELECT * FROM paciente ORDER BY pac_cidade", "rel_pacientes.jasper","Relação de pacientes");
+    }
+
+    public void onRelAgenda(ActionEvent actionEvent) {
+        String sql = """
+                SELECT c.con_relato, c.con_horario, c.pac_id, c.con_efetivado, c.den_nome, p.pac_nome FROM (
+                	SELECT c.con_relato, c.con_horario, c.pac_id, c.con_efetivado, d.den_nome FROM consulta c
+                	JOIN dentista d ON c.den_id = d.den_id
+                	WHERE con_data = CURRENT_DATE
+                ) c
+                JOIN paciente p ON p.pac_id = c.pac_id
+                """;
+        GeradorRelatorios.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
+    }
+
+    public void onRelAtendimento(ActionEvent actionEvent) {
+        // individual. atendimento de um paciente.
+    }
+
+    private void esconderRecursosAdmin() {
+        menu_relatorios.setVisible(false);
+        menu_item_usuario.setVisible(false);
+        menu_sistema.setVisible(false);
+    }
+
+    public void onBackup(ActionEvent actionEvent) throws Exception {
+        String arquivo = "bdutil/backup/sisdental.sql";
+        Banco.backup(arquivo, "sisdentaldb");
+    }
+
+    public void onRestore(ActionEvent actionEvent) throws Exception {
+        String arquivo = "bdutil/backup/sisdental.sql";
+        Banco.restaurar(arquivo, "sisdentaldb");
+    }
+
+    public void onTopicos(ActionEvent actionEvent) throws Exception {
+        GerenciadorTelas.carregar(new Stage(), Constantes.AJUDA, "DentalFX - Ajuda", "icone", true);
     }
 }

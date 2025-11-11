@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Dentista;
 import matheus.bcc.dentalfx.db.entidades.Pessoa;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
-import matheus.bcc.dentalfx.util.Confirmacao;
+import matheus.bcc.dentalfx.util.Alerta;
 import matheus.bcc.dentalfx.util.Constantes;
 import matheus.bcc.dentalfx.util.GerenciadorTelas;
 import matheus.bcc.dentalfx.util.MaskFieldUtil;
@@ -30,21 +30,20 @@ public class DentistaTableController implements Initializable {
     public TableColumn<Pessoa, String> col_email;
     public TableColumn<Pessoa, String> col_fone;
 
-    public static Dentista dentista = null;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabela();
+        carregarTabela("");
+    }
+
+    private void configurarTabela() {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_nome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         col_cro.setCellValueFactory(new PropertyValueFactory<>("cro"));
         col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
         col_fone.setCellValueFactory(new PropertyValueFactory<>("fone"));
-
         MaskFieldUtil.foneField(col_fone);
-        carregarTabela("");
     }
-
-
 
     private void carregarTabela(String filtro) {
         PessoaDAL dal = new PessoaDAL();
@@ -63,10 +62,14 @@ public class DentistaTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
-        if (table_view.getSelectionModel().getSelectedItem() != null) {
-            dentista = (Dentista) table_view.getSelectionModel().getSelectedItem();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_DENTISTA, "Alterar Dentista", "icone", true);
-            dentista = null;
+        Dentista dentista = (Dentista) table_view.getSelectionModel().getSelectedItem();
+        if (dentista != null) {
+            GerenciadorTelas.carregar(new Stage(),
+                    Constantes.FORM_DENTISTA,
+                    "Alterar Dentista", "icone",
+                    true,
+                    (DentistaFormController controller) -> controller.carregarDentista(dentista)
+            );
             carregarTabela("");
         }
     }
@@ -74,7 +77,7 @@ public class DentistaTableController implements Initializable {
     public void onApagar(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Dentista dentista = (Dentista) table_view.getSelectionModel().getSelectedItem();
-            if (Confirmacao.exibir("Deseja realmente apagar o dentista " + dentista.getNome() + "?"))
+            if (Alerta.exibirConfirmacao("Apagar dentista", "Deseja realmente apagar o dentista " + dentista.getNome() + "?"))
                 new PessoaDAL().apagar(dentista);
         }
         carregarTabela("");

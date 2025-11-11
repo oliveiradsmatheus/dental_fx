@@ -11,7 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Procedimento;
 import matheus.bcc.dentalfx.db.repositorios.ProcedimentoDAL;
-import matheus.bcc.dentalfx.util.Confirmacao;
+import matheus.bcc.dentalfx.util.Alerta;
 import matheus.bcc.dentalfx.util.Constantes;
 import matheus.bcc.dentalfx.util.GerenciadorTelas;
 
@@ -27,16 +27,17 @@ public class ProcedimentoTableController implements Initializable {
     public TextField tf_pesquisa;
     public TableView<Procedimento> table_view;
 
-    public static Procedimento procedimento = null;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabela();
+        carregarTabela("");
+    }
+
+    private void configurarTabela() {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_desc.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         col_tempo.setCellValueFactory(new PropertyValueFactory<>("tempo"));
         col_valor.setCellValueFactory(new PropertyValueFactory<>("valor"));
-
-        carregarTabela("");
     }
 
     private void carregarTabela(String filtro) {
@@ -56,10 +57,14 @@ public class ProcedimentoTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
-        if (table_view.getSelectionModel().getSelectedItem() != null) {
-            procedimento = table_view.getSelectionModel().getSelectedItem();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_PROCEDIMENTO, "Alterar Procedimento", "icone", true);
-            procedimento = null;
+        Procedimento procedimento = table_view.getSelectionModel().getSelectedItem();
+        if (procedimento != null) {
+            GerenciadorTelas.carregar(new Stage(),
+                    Constantes.FORM_PROCEDIMENTO,
+                    "Alterar Procedimento", "icone",
+                    true,
+                    (ProcedimentoFormController controller) -> controller.carregarProcedimento(procedimento)
+            );
             carregarTabela("");
         }
     }
@@ -67,7 +72,7 @@ public class ProcedimentoTableController implements Initializable {
     public void onApagar(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Procedimento procedimento = table_view.getSelectionModel().getSelectedItem();
-            if (Confirmacao.exibir("Deseja realmente apagar paciente " + procedimento.getDescricao() + "?"))
+            if (Alerta.exibirConfirmacao("Apagar paciente", "Deseja realmente apagar paciente " + procedimento.getDescricao() + "?"))
                 new ProcedimentoDAL().apagar(procedimento);
         }
         carregarTabela("");

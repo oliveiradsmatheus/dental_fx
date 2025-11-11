@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox prefHeight="768.0" prefWidth="1024.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.PacienteTableController">
+<VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.PacienteTableController">
     <children>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1024.0" spacing="36.0">
             <children>
@@ -32,6 +32,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onAlterar" text="Alterar" />
                         <MenuItem mnemonicParsing="false" onAction="#onApagar" text="Apagar" />
+                        <MenuItem mnemonicParsing="false" onAction="#onImprimirFicha" text="Imprimir Ficha" />
                     </items>
                 </ContextMenu>
             </contextMenu>

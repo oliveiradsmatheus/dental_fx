@@ -11,6 +11,10 @@ public class Horario {
         atendimento = null;
     }
 
+    public Horario(int sequencia) {
+        this(sequencia, null);
+    }
+
     public Horario() {
         this(0,null);
     }

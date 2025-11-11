@@ -3,7 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox prefHeight="390.0" prefWidth="768.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.MaterialFormController">
+<VBox prefHeight="390.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.MaterialFormController">
     <children>
         <VBox VBox.vgrow="ALWAYS">
             <children>
@@ -32,8 +32,8 @@
         </VBox>
         <HBox alignment="CENTER" maxHeight="96.0" prefHeight="96.0" prefWidth="768.0" spacing="48.0">
             <children>
-                <Button fx:id="bt_confirmar" mnemonicParsing="false" onAction="#onConfirmar" prefHeight="33.0" prefWidth="132.0" text="Confirmar" />
-                <Button fx:id="bt_cancelar" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCancelar" prefHeight="33.0" prefWidth="132.0" text="Cancelar" />
+                <Button mnemonicParsing="false" onAction="#onConfirmar" prefHeight="33.0" prefWidth="132.0" text="Confirmar" />
+                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCancelar" prefHeight="33.0" prefWidth="132.0" text="Cancelar" />
             </children>
         </HBox>
     </children>

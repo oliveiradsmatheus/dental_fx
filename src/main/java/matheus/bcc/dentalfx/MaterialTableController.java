@@ -11,7 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Material;
 import matheus.bcc.dentalfx.db.repositorios.MaterialDAL;
-import matheus.bcc.dentalfx.util.Confirmacao;
+import matheus.bcc.dentalfx.util.Alerta;
 import matheus.bcc.dentalfx.util.Constantes;
 import matheus.bcc.dentalfx.util.GerenciadorTelas;
 
@@ -26,15 +26,16 @@ public class MaterialTableController implements Initializable {
     public TextField tf_pesquisa;
     public TableView<Material> table_view;
 
-    public static Material material = null;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabela();
+        carregarTabela("");
+    }
+
+    private void configurarTabela() {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_desc.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         col_preco.setCellValueFactory(new PropertyValueFactory<>("preco"));
-
-        carregarTabela("");
     }
 
     private void carregarTabela(String filtro) {
@@ -54,10 +55,14 @@ public class MaterialTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
-        if (table_view.getSelectionModel().getSelectedItem() != null) {
-            material = table_view.getSelectionModel().getSelectedItem();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_MATERIAL, "Alterar Material", "icone", true);
-            material = null;
+        Material material = table_view.getSelectionModel().getSelectedItem();
+        if (material != null) {
+            GerenciadorTelas.carregar(new Stage(),
+                    Constantes.FORM_MATERIAL,
+                    "Alterar Material", "icone",
+                    true,
+                    (MaterialFormController controller) -> controller.carregarMaterial(material)
+            );
             carregarTabela("");
         }
     }
@@ -65,7 +70,7 @@ public class MaterialTableController implements Initializable {
     public void onApagar(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Material material = table_view.getSelectionModel().getSelectedItem();
-            if (Confirmacao.exibir("Deseja realmente apagar o material " + material.getDescricao() + "?"))
+            if (Alerta.exibirConfirmacao("Apagar material", "Deseja realmente apagar o material " + material.getDescricao() + "?"))
                 new MaterialDAL().apagar(material);
         }
         carregarTabela("");

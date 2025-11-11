@@ -3,7 +3,7 @@ package matheus.bcc.dentalfx.db.repositorios;
 import matheus.bcc.dentalfx.db.entidades.Procedimento;
 import matheus.bcc.dentalfx.db.util.IDAL;
 import matheus.bcc.dentalfx.db.util.SingletonDB;
-import matheus.bcc.dentalfx.util.Erro;
+import matheus.bcc.dentalfx.util.Alerta;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class ProcedimentoDAL implements IDAL<Procedimento> {
                 procedimento = new Procedimento(rs.getInt("pro_id"), rs.getString("pro_desc"), rs.getDouble("pro_tempo"), rs.getDouble("pro_valor"));
             rs.close();
         } catch(Exception e) {
-            Erro.exibir("Erro: " + e.getMessage());
+            Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
         }
         return procedimento;
     }
@@ -62,7 +62,7 @@ public class ProcedimentoDAL implements IDAL<Procedimento> {
                 procedimentoList.add(new Procedimento(rs.getInt("pro_id"), rs.getString("pro_desc"), rs.getDouble("pro_tempo"), rs.getDouble("pro_valor")));
             rs.close();
         } catch (Exception e) {
-            Erro.exibir("Erro: " + e.getMessage());
+            Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
         }
         return procedimentoList;
     }

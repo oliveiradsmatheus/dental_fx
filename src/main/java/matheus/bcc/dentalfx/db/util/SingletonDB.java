@@ -1,9 +1,12 @@
 package matheus.bcc.dentalfx.db.util;
 
-import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.List;
 
 public class SingletonDB {
     private static Conexao conexao = null;
@@ -40,12 +43,12 @@ public class SingletonDB {
             Connection con = DriverManager.getConnection(url, "postgres","postgres123");
 
             Statement statement = con.createStatement();
-            RandomAccessFile arq = new RandomAccessFile(script, "r");
-            while (arq.getFilePointer() < arq.length())
-                statement.addBatch(arq.readLine());
+            List<String> linhas = Files.readAllLines(Paths.get(script), StandardCharsets.UTF_8);
+            for (String linha : linhas)
+                if (!linha.trim().isEmpty() && !linha.trim().startsWith("--"))
+                    statement.addBatch(linha);
             statement.executeBatch();
 
-            arq.close();
             statement.close();
             con.close();
         } catch (Exception e) {

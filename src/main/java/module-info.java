@@ -6,6 +6,12 @@ module matheus.bcc.dentalfx {
     requires javafx.graphics;
     requires javafx.base;
     requires org.json;
+    requires java.prefs;
+    requires kernel;
+    requires io;
+    requires layout;
+    requires jasperreports;
+    requires javafx.web;
 
 
     opens matheus.bcc.dentalfx to javafx.fxml;

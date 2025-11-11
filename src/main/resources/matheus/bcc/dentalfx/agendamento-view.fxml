@@ -8,23 +8,61 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.AgendamentoTableController">
+<VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.AgendamentoController">
     <children>
         <MenuBar nodeOrientation="RIGHT_TO_LEFT">
             <menus>
-                <Menu mnemonicParsing="false" style="-fx-color: white;" text="▒">
+                <Menu mnemonicParsing="false" text="Ajuda">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onPaciente" text="PACIENTE" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMedico" text="DENTISTA" />
-                        <MenuItem mnemonicParsing="false" onAction="#onMaterial" text="MATERIAL" />
-                        <MenuItem mnemonicParsing="false" onAction="#onProcedimento" text="PROCEDIMENTO" />
-                        <MenuItem mnemonicParsing="false" onAction="#onTrocarTema" text="ALTERAR TEMA" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSobre" text="Sobre" />
+                  <MenuItem mnemonicParsing="false" onAction="#onTopicos" text="Topicos" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Tema">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onTrocarTema" text="Trocar Tema" />
+                    </items>
+                </Menu>
+            <Menu fx:id="menu_sistema" mnemonicParsing="false" text="Sistema">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onBackup" text="Backup" />
+                  <MenuItem mnemonicParsing="false" onAction="#onRestore" text="Restore" />
+               </items>
+            </Menu>
+                <Menu fx:id="menu_relatorios" mnemonicParsing="false" text="Relatorios">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Básicos">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onRelMaterial" text="Material" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRelProcedimento" text="Procedimentos" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRelPacientes" text="Pacientes" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onRelAgenda" text="Agenda do Dia" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Analíticos">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onRelAtendimento" text="Atendimentos" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Cadastros">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onPaciente" text="Paciente" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDentista" text="Dentista" />
+                        <MenuItem fx:id="menu_item_usuario" mnemonicParsing="false" onAction="#onUsuario" text="Usuário" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onMaterial" text="Material" />
+                        <MenuItem mnemonicParsing="false" onAction="#onProcedimento" text="Procedimento" />
                     </items>
                 </Menu>
             </menus>
@@ -53,7 +91,7 @@
                     <children>
                         <TableView fx:id="table_view" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="col_hora" maxWidth="75.0" prefWidth="75.0" text="HORA" />
+                                <TableColumn fx:id="col_hora" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="HORA" />
                                 <TableColumn fx:id="col_paciente" prefWidth="75.0" text="PACIENTE" />
                             </columns>
                             <VBox.margin>
@@ -83,6 +121,9 @@
                     </children>
                 </VBox>
             </children>
+            <VBox.margin>
+                <Insets top="30.0" />
+            </VBox.margin>
         </HBox>
     </children>
     <padding>

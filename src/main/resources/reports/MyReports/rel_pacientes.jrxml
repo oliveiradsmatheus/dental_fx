@@ -1,0 +1,95 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="rel_pacientes" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cbb9f18-0e9d-4f01-8260-c0bc52837169">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (2)"/>
+	<query language="SQL"><![CDATA[SELECT * FROM paciente ORDER BY pac_cidade]]></query>
+	<field name="pac_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pac_nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="pac_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+	</field>
+	<field name="pac_cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pac_cpf"/>
+		<property name="com.jaspersoft.studio.field.label" value="pac_cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+	</field>
+	<field name="pac_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pac_fone"/>
+		<property name="com.jaspersoft.studio.field.label" value="pac_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+	</field>
+	<field name="pac_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pac_cidade"/>
+		<property name="com.jaspersoft.studio.field.label" value="pac_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
+	</field>
+	<group name="Group1">
+		<expression><![CDATA[$F{pac_cidade}]]></expression>
+		<groupHeader>
+			<band height="33">
+				<element kind="textField" uuid="567f60be-8f2b-4b2c-9652-9bb7930c9dee" mode="Opaque" x="0" y="0" width="555" height="32" forecolor="#006699" backcolor="#E6E6E6" fontName="Liberation Sans" fontSize="24.0" bold="true">
+					<expression><![CDATA[$F{pac_cidade}]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background/>
+	<title height="72">
+		<element kind="frame" uuid="ea85fd0a-e2ed-4573-9630-10b99107d50e" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699">
+			<element kind="staticText" uuid="8e8cd714-e418-4b0e-bb6e-b9d71c2ba914" x="20" y="20" width="234" height="43" forecolor="#FFFFFF" fontName="Liberation Sans" fontSize="34.0" bold="true">
+				<text><![CDATA[DentalFX]]></text>
+			</element>
+			<element kind="staticText" uuid="94057a36-6809-4fdc-abdc-8ec5c2af420d" x="395" y="43" width="180" height="20" forecolor="#FFFFFF" fontSize="14.0" bold="false" hTextAlign="Right">
+				<text><![CDATA[Relatório de pacientes]]></text>
+			</element>
+		</element>
+	</title>
+	<pageHeader height="13"/>
+	<columnHeader height="21">
+		<element kind="line" uuid="815f4d90-746b-428d-9031-a614cef36a72" x="-20" y="20" width="595" height="1" forecolor="#666666"/>
+		<element kind="staticText" uuid="cccc6295-2684-443f-bf79-37bac1b2c8bb" mode="Opaque" x="0" y="0" width="250" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Left">
+			<text><![CDATA[Nome]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c855d93d-92b8-4b8e-81ab-d5717a1ea1ef"/>
+		</element>
+		<element kind="staticText" uuid="abe862ff-8620-4e44-877c-5115c2e86247" mode="Opaque" x="250" y="0" width="150" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[CPF]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1cb80e42-497b-46bb-956c-e6464c39ee0f"/>
+		</element>
+		<element kind="staticText" uuid="7fab1f0b-6e1c-42d7-95c7-7c48c236d393" mode="Opaque" x="400" y="0" width="155" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Telefone]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="36a0165e-1a9a-4dfa-8429-9e2c2e538747"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<element kind="textField" uuid="127730b7-802e-4eb7-ab47-fbb46e90ab6c" x="0" y="0" width="250" height="20" fontSize="14.0" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{pac_nome}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c855d93d-92b8-4b8e-81ab-d5717a1ea1ef"/>
+			</element>
+			<element kind="textField" uuid="439dd0c4-4bfe-4d13-b1ed-4688e4ed1a98" x="250" y="0" width="150" height="20" fontSize="14.0" textAdjust="StretchHeight" hTextAlign="Center">
+				<expression><![CDATA[$F{pac_cpf}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1cb80e42-497b-46bb-956c-e6464c39ee0f"/>
+			</element>
+			<element kind="textField" uuid="2477b8f2-cb4a-4417-ba69-0826598e1092" x="400" y="0" width="155" height="20" fontSize="14.0" textAdjust="StretchHeight" hTextAlign="Center">
+				<expression><![CDATA[$F{pac_fone}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="36a0165e-1a9a-4dfa-8429-9e2c2e538747"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter/>
+	<pageFooter height="17">
+		<element kind="textField" uuid="fb0062a0-9404-4793-87e6-cb56b9570dae" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" fontName="Liberation Sans" hTextAlign="Right">
+			<expression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></expression>
+		</element>
+		<element kind="textField" uuid="890ee7d7-e270-45c2-9379-580ae949a101" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" fontName="Liberation Sans" evaluationTime="Report">
+			<expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="0dfa1f74-d09b-4881-a84a-4d3b5d20a42c" x="0" y="4" width="280" height="13" fontName="Liberation Sans" pattern="EEEE, dd 'de' MMMM 'de' yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+	<summary/>
+</jasperReport>

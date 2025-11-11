@@ -1,9 +1,12 @@
 package matheus.bcc.dentalfx.db.repositorios;
 
-import matheus.bcc.dentalfx.db.entidades.*;
+import matheus.bcc.dentalfx.db.entidades.Dentista;
+import matheus.bcc.dentalfx.db.entidades.Paciente;
+import matheus.bcc.dentalfx.db.entidades.Pessoa;
+import matheus.bcc.dentalfx.db.entidades.Usuario;
 import matheus.bcc.dentalfx.db.util.IDAL;
 import matheus.bcc.dentalfx.db.util.SingletonDB;
-import matheus.bcc.dentalfx.util.Erro;
+import matheus.bcc.dentalfx.util.Alerta;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -54,16 +57,19 @@ public class PessoaDAL implements IDAL<Pessoa> {
             sql = sql.replace("#A", ((Paciente) pessoa).getEmail());
             sql = sql.replace("#B", ((Paciente) pessoa).getHistorico());
         } else if (pessoa instanceof Usuario) {
+            String denId = (((Usuario) pessoa).getDenId() == null) ? "NULL" : ((Usuario) pessoa).getDenId().toString();
             sql = """
                 INSERT INTO usuario (
                     uso_nome,
                     uso_nivel,
-                    uso_senha
-                ) VALUES ('#1', #2, '#3');
+                    uso_senha,
+                    den_id
+                ) VALUES ('#1', #2, '#3', #4);
             """;
             sql = sql.replace("#1", pessoa.getNome());
             sql = sql.replace("#2", "" + ((Usuario) pessoa).getNivel());
             sql = sql.replace("#3", ((Usuario) pessoa).getSenha());
+            sql = sql.replace("#4", denId);
         }
         return SingletonDB.getConexao().manipular(sql);
     }
@@ -114,17 +120,20 @@ public class PessoaDAL implements IDAL<Pessoa> {
             sql = sql.replace("#B", ((Paciente) pessoa).getHistorico());
             sql = sql.replace("#C", "" + pessoa.getId());
         } else if (pessoa instanceof Usuario) {
+            String denId = (((Usuario) pessoa).getDenId() == null) ? "NULL" : ((Usuario) pessoa).getDenId().toString();
             sql = """
                 UPDATE usuario SET
                     uso_nome = '#1',
                     uso_nivel = #2,
-                    uso_senha = '#3'
-                WHERE uso_id = #4;
+                    uso_senha = '#3',
+                    den_id = #4
+                WHERE uso_id = #5;
             """;
             sql = sql.replace("#1", pessoa.getNome());
             sql = sql.replace("#2", "" + ((Usuario) pessoa).getNivel());
             sql = sql.replace("#3", ((Usuario) pessoa).getSenha());
-            sql = sql.replace("#4", "" + pessoa.getId());
+            sql = sql.replace("#4", denId);
+            sql = sql.replace("#5", "" + pessoa.getId());
 
         }
         return SingletonDB.getConexao().manipular(sql);
@@ -147,6 +156,28 @@ public class PessoaDAL implements IDAL<Pessoa> {
         return null;
     }
 
+    public Usuario getUsuario(String nome) {
+        Usuario usuario = null;
+        ResultSet rs;
+        String sql = "SELECT * FROM usuario WHERE uso_nome = '#1'";
+        sql = sql.replace("#1", nome);
+        rs = SingletonDB.getConexao().consultar(sql);
+        try {
+            Usuario Usuario;
+            if (rs.next())
+                usuario = new Usuario(
+                        rs.getInt("uso_id"),
+                        rs.getString("uso_nome"),
+                        rs.getInt("uso_nivel"),
+                        rs.getString("uso_senha"),
+                        rs.getObject("den_id", Integer.class)
+                );
+        } catch (Exception e) {
+            Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
+        }
+        return usuario;
+    }
+
     public Pessoa get(int id, Pessoa p) {
         Pessoa pessoa = null;
         ResultSet rs;
@@ -164,7 +195,7 @@ public class PessoaDAL implements IDAL<Pessoa> {
                             rs.getString("den_email")
                     );
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         } else if (p instanceof Paciente) {
             sql += "paciente WHERE pac_id = " + id;
@@ -186,7 +217,7 @@ public class PessoaDAL implements IDAL<Pessoa> {
                             rs.getString("pac_histo")
                     );
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         } else if (p instanceof Usuario) {
             sql += "usuario WHERE uso_id = " + id;
@@ -197,10 +228,11 @@ public class PessoaDAL implements IDAL<Pessoa> {
                             rs.getInt("uso_id"),
                             rs.getString("uso_nome"),
                             rs.getInt("uso_nivel"),
-                            rs.getString("uso_senha")
+                            rs.getString("uso_senha"),
+                            rs.getObject("den_id", Integer.class)
                     );
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         }
         return pessoa;
@@ -231,7 +263,7 @@ public class PessoaDAL implements IDAL<Pessoa> {
                     ));
                 rs.close();
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         } else if (pessoa instanceof Paciente) {
             sql += "paciente";
@@ -256,7 +288,7 @@ public class PessoaDAL implements IDAL<Pessoa> {
                     ));
                 rs.close();
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         } else if (pessoa instanceof Usuario) {
             sql += "usuario";
@@ -269,11 +301,12 @@ public class PessoaDAL implements IDAL<Pessoa> {
                             rs.getInt("uso_id"),
                             rs.getString("uso_nome"),
                             rs.getInt("uso_nivel"),
-                            rs.getString("uso_senha")
+                            rs.getString("uso_senha"),
+                            rs.getObject("den_id", Integer.class)
                     ));
                 rs.close();
             } catch (Exception e) {
-                Erro.exibir("Erro: " + e.getMessage());
+                Alerta.exibirErro("Erro", "Erro: " + e.getMessage());
             }
         }
         return pessoaList;

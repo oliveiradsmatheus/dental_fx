@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Pessoa;
 import matheus.bcc.dentalfx.db.entidades.Usuario;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
-import matheus.bcc.dentalfx.util.Confirmacao;
+import matheus.bcc.dentalfx.util.Alerta;
 import matheus.bcc.dentalfx.util.Constantes;
 import matheus.bcc.dentalfx.util.GerenciadorTelas;
 
@@ -27,15 +27,16 @@ public class UsuarioTableController implements Initializable {
     public TableColumn<Pessoa, String> col_nome;
     public TableColumn<Pessoa, String> col_nivel;
 
-    public static Usuario usuario = null;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabela();
+        carregarTabela("");
+    }
+
+    private void configurarTabela() {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_nome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         col_nivel.setCellValueFactory(new PropertyValueFactory<>("nivel"));
-
-        carregarTabela("");
     }
 
     private void carregarTabela(String filtro) {
@@ -55,10 +56,14 @@ public class UsuarioTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
-        if (table_view.getSelectionModel().getSelectedItem() != null) {
-            usuario = (Usuario) table_view.getSelectionModel().getSelectedItem();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_USUARIO, "Alterar Usuário", "icone", true);
-            usuario = null;
+        Usuario usuario = (Usuario) table_view.getSelectionModel().getSelectedItem();
+        if (usuario != null) {
+            GerenciadorTelas.carregar(new Stage(),
+                    Constantes.FORM_USUARIO,
+                    "Alterar Usuario", "icone",
+                    true,
+                    (UsuarioFormController controller) -> controller.carregarUsuario(usuario)
+            );
             carregarTabela("");
         }
     }
@@ -66,7 +71,7 @@ public class UsuarioTableController implements Initializable {
     public void onApagar(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Usuario usuario = (Usuario) table_view.getSelectionModel().getSelectedItem();
-            if (Confirmacao.exibir("Deseja realmente apagar o usuário " + usuario.getNome() + "?"))
+            if (Alerta.exibirConfirmacao("Apagar usuário", "Deseja realmente apagar o usuário " + usuario.getNome() + "?"))
                 new PessoaDAL().apagar(usuario);
         }
         carregarTabela("");

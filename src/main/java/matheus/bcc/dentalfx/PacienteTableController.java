@@ -12,10 +12,7 @@ import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Paciente;
 import matheus.bcc.dentalfx.db.entidades.Pessoa;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
-import matheus.bcc.dentalfx.util.Confirmacao;
-import matheus.bcc.dentalfx.util.Constantes;
-import matheus.bcc.dentalfx.util.GerenciadorTelas;
-import matheus.bcc.dentalfx.util.MaskFieldUtil;
+import matheus.bcc.dentalfx.util.*;
 
 import java.net.URL;
 import java.util.List;
@@ -30,18 +27,19 @@ public class PacienteTableController implements Initializable {
     public TableColumn<Pessoa, String> col_cidade;
     public TableColumn<Pessoa, String> col_fone;
 
-    public static Paciente paciente = null;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabela();
+        carregarTabela("");
+    }
+
+    private void configurarTabela() {
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_nome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         col_cpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         col_cidade.setCellValueFactory(new PropertyValueFactory<>("cidade"));
         col_fone.setCellValueFactory(new PropertyValueFactory<>("fone"));
-
         MaskFieldUtil.foneField(col_fone);
-        carregarTabela("");
     }
 
     private void carregarTabela(String filtro) {
@@ -61,10 +59,15 @@ public class PacienteTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
-        if (table_view.getSelectionModel().getSelectedItem() != null) {
-            paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
-            GerenciadorTelas.carregar(new Stage(), Constantes.FORM_PACIENTE, "Alterar Paciente", "icone", true);
-            paciente = null;
+        Paciente paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
+        if (paciente != null) {
+            GerenciadorTelas.carregar(
+                    new Stage(),
+                    Constantes.FORM_PACIENTE,
+                    "Alterar Paciente", "icone",
+                    true,
+                    (PacienteFormController controller) -> controller.carregarPaciente(paciente)
+            );
             carregarTabela("");
         }
     }
@@ -72,10 +75,17 @@ public class PacienteTableController implements Initializable {
     public void onApagar(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Paciente paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
-            if (Confirmacao.exibir("Deseja realmente apagar o paciente " + paciente.getNome() + "?"))
+            if (Alerta.exibirConfirmacao("Apagar cliente","Deseja realmente apagar o paciente " + paciente.getNome() + "?"))
                 new PessoaDAL().apagar(paciente);
         }
         carregarTabela("");
+    }
+
+    public void onImprimirFicha(ActionEvent actionEvent) {
+        if (table_view.getSelectionModel().getSelectedItem() != null) {
+            Paciente paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
+            GeradorPDF.imprimirFicha(paciente);
+        }
     }
 
     public void onFechar(ActionEvent actionEvent) {

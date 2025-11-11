@@ -13,9 +13,8 @@ public class Agenda {
         this.dentista = dentista;
         this.data = data;
         horarioList = new ArrayList<>();
-        // Criando os 10 horários de atendimento diário
         for (int i = 0; i < 10; i++)
-            horarioList.add(new Horario());
+            horarioList.add(new Horario(i)); // Criando os 10 horários de atendimento diário
     }
 
     public void setHorario(int sequencia, Horario horario) {

@@ -2,77 +2,106 @@ package matheus.bcc.dentalfx.util;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import matheus.bcc.dentalfx.db.entidades.Usuario;
+import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
 
 public class LoginPanel extends VBox {
-    private boolean loginValido;
-    private int nivelAcesso = 0;
+    private boolean sucesso = false;
 
     public LoginPanel() {
-        super();
         setAlignment(Pos.CENTER);
-        setPadding(new Insets(20, 20, 20, 20));
-        Label loginLabel = new Label("Login:");
-        loginLabel.setPadding(new Insets(0,0,10,0));
-        TextField loginField = new TextField();
-        Label passwordLabel = new Label("Senha:");
-        passwordLabel.setPadding(new Insets(20, 0, 10, 0));
-        PasswordField passwordField = new PasswordField();
-        Button loginButton = new Button("Entrar");
-        VBox.setMargin(loginButton, new Insets(30, 0, 0, 0));
+        setPadding(new Insets(30, 30, 30, 30));
 
-        loginButton.setOnAction(event -> {
-            String login = loginField.getText();
-            String password = passwordField.getText();
-            loginValido = verifyLogin(login, password);
+        setSpacing(5);
+
+        Label login_label = new Label("Login:");
+        TextField login_field = new TextField();
+        login_label.setPadding(new Insets(0,0,0,0));
+
+        Label password_label = new Label("Senha:");
+        PasswordField password_field = new PasswordField();
+        password_label.setPadding(new Insets(20, 0, 0, 0));
+
+        Button bt_login = new Button("Entrar");
+        bt_login.setDefaultButton(true);
+
+        Button bt_cancelar = new Button("Cancelar");
+        bt_cancelar.setCancelButton(true);
+
+        HBox hb_botoes = new HBox(10, bt_login, bt_cancelar);
+        hb_botoes.setAlignment(Pos.CENTER);
+
+        VBox.setMargin(hb_botoes, new Insets(30, 0, 0, 0));
+
+        bt_login.setOnAction(event -> {
+            String login = login_field.getText();
+            String password = password_field.getText();
+            sucesso = verificarLogin(login, password);
+            if (sucesso)
+                getScene().getWindow().hide();
+            else {
+                login_field.setText("");
+                password_field.setText("");
+            }
+        });
+
+        bt_cancelar.setOnAction(event -> {
+            Sessao.getInstancia().limparSessao();
+            sucesso = false;
             getScene().getWindow().hide();
         });
 
-        getChildren().add(loginLabel);
-        getChildren().add(loginField);
-        getChildren().add(passwordLabel);
-        getChildren().add(passwordField);
-        getChildren().add(loginButton);
-
+        getChildren().add(login_label);
+        getChildren().add(login_field);
+        getChildren().add(password_label);
+        getChildren().add(password_field);
+        getChildren().add(hb_botoes);
     }
 
-    private boolean verifyLogin(String login, String password) {
-        // coloque aqui a lógica para verificar se o login é válido
-        // aqui estamos apenas verificando se A SENHA É O LOGIN invertido
-        String reversedLogin = new StringBuilder(login).reverse().toString();
-        //verifique também o nível de acesso do usuário, caso pertinente
-        nivelAcesso = 1;
-        return reversedLogin.equals(password);
+    private boolean verificarLogin(String login, String password) {
+        if (!login.isEmpty() &&  !password.isEmpty()) {
+            PessoaDAL dal = new PessoaDAL();
+            Usuario usuario = dal.getUsuario(login);
+
+            if (usuario != null)
+                if (usuario.getSenha().equals(password)) {
+                    Sessao.getInstancia().criarSessao(usuario);
+                    return true;
+                }
+            Alerta.exibirErro("Erro", "Usuário ou senha incorretos!");
+        } else
+            Alerta.exibirErro("Erro", "Preencha todos os campos para realizar Login");
+        return false;
     }
 
-    public boolean isLoginValido() {
-        return loginValido;
+    public boolean isSucesso() {
+        return sucesso;
     }
 
-    public int getNivelAcesso() {
-        return nivelAcesso;
+    public static boolean exibir() {
+        Stage stage = new Stage();
+        LoginPanel pLogin = new LoginPanel();
+
+        stage.initStyle(StageStyle.UTILITY);
+        pLogin.setPrefWidth(512);
+        stage.setTitle("Login");
+        stage.setScene(new Scene(pLogin));
+        GerenciadorTemas.registrar(stage.getScene());
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(new Image(Alerta.class.getResourceAsStream("/icones/icone.png")));
+        stage.showAndWait();
+
+        return pLogin.isSucesso();
     }
 }
-
-//coloque o seguinte código no método start do código de lançamento
-//crie um novo stage, não use o que vem como parâmetro do start
-//Stage stageLogin = new Stage();
-//            stageLogin.initStyle(StageStyle.UTILITY);
-//
-//LoginPanel pLogin = new LoginPanel();
-//            pLogin.setPrefWidth(380);
-//            stageLogin.setScene(new Scene(pLogin));
-//        stageLogin.showAndWait();
-//            if (pLogin.isLoginValido()) {
-//        // escolha o fxml de acordo com o nível de usuário, caso pertinente
-//        // execute o lançamento do stage
-//        }
