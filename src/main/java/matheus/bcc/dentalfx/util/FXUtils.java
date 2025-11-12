@@ -2,8 +2,11 @@ package matheus.bcc.dentalfx.util;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,5 +36,19 @@ public class FXUtils {
                     setText(funcao.apply(item));
             }
         });
+    }
+
+    public static void configurarDatePicker(DatePicker datePicker) {
+        datePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #EEEEEE;");
+                }
+            }
+        });
+        datePicker.setValue(LocalDate.now());
     }
 }

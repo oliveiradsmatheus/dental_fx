@@ -107,6 +107,7 @@
             <version>7.0.2</version>
         </dependency>
 
+
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
@@ -119,11 +120,13 @@
             </exclusions>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
             <version>2.1.7</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

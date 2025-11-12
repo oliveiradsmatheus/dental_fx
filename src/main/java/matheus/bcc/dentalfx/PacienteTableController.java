@@ -9,8 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import matheus.bcc.dentalfx.db.dto.ConsultaDTO;
 import matheus.bcc.dentalfx.db.entidades.Paciente;
 import matheus.bcc.dentalfx.db.entidades.Pessoa;
+import matheus.bcc.dentalfx.db.repositorios.ConsultaDAL;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
 import matheus.bcc.dentalfx.util.*;
 
@@ -84,7 +86,9 @@ public class PacienteTableController implements Initializable {
     public void onImprimirFicha(ActionEvent actionEvent) {
         if (table_view.getSelectionModel().getSelectedItem() != null) {
             Paciente paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
-            GeradorPDF.imprimirFicha(paciente);
+            ConsultaDAL consultaDAL = new ConsultaDAL();
+            List<ConsultaDTO> listaConsultas = consultaDAL.buscarConsultasPorPaciente(paciente.getId());
+            GeradorPDF.imprimirFicha(paciente, listaConsultas);
         }
     }
 

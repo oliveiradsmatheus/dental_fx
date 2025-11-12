@@ -13,11 +13,12 @@ module matheus.bcc.dentalfx {
     requires jasperreports;
     requires javafx.web;
 
-
     opens matheus.bcc.dentalfx to javafx.fxml;
     exports matheus.bcc.dentalfx;
 
     // Habilitando reflexão para acesso ao package entidades
     opens matheus.bcc.dentalfx.db.entidades to javafx.fxml;
     exports matheus.bcc.dentalfx.db.entidades;
+    exports matheus.bcc.dentalfx.db.dto;
+    opens matheus.bcc.dentalfx.db.dto to javafx.fxml;
 }

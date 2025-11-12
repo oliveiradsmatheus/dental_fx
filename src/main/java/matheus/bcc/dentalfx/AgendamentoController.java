@@ -33,10 +33,9 @@ public class AgendamentoController implements Initializable {
         Usuario usuario = Sessao.getInstancia().getUsuario();
         if (usuario.getNivel() != 1)
             esconderRecursosAdmin();
-        configurarCalendario();
+        FXUtils.configurarDatePicker(dp_dia_consulta);
         configurarCB();
         configurarTabela();
-        dp_dia_consulta.setValue(LocalDate.now());
     }
 
     public void onPaciente(ActionEvent actionEvent) {
@@ -105,19 +104,6 @@ public class AgendamentoController implements Initializable {
             Alerta.exibirErro("", "Não Confirmado");
     }
 
-    private void configurarCalendario() {
-        dp_dia_consulta.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                if (date.isBefore(LocalDate.now())) {
-                    setDisable(true);
-                    setStyle("-fx-background-color: #EEEEEE;");
-                }
-            }
-        });
-    }
-
     private void configurarCB() {
         PessoaDAL pessoaDAL = new PessoaDAL();
         List<Pessoa> dentistas = pessoaDAL.get("", new Dentista());
@@ -165,15 +151,15 @@ public class AgendamentoController implements Initializable {
     }
 
     public void onRelMaterial(ActionEvent actionEvent) {
-        GeradorRelatorios.gerarRelatorio("SELECT * FROM material ORDER BY mat_desc", "rel_materiais.jasper","Relação de materiais");
+        JasperUtils.gerarRelatorio("SELECT * FROM material ORDER BY mat_desc", "rel_materiais.jasper","Relação de materiais");
     }
 
     public void onRelProcedimento(ActionEvent actionEvent) {
-        GeradorRelatorios.gerarRelatorio("SELECT * FROM procedimento ORDER BY pro_desc", "rel_procedimentos.jasper","Relação de pacientes");
+        JasperUtils.gerarRelatorio("SELECT * FROM procedimento ORDER BY pro_desc", "rel_procedimentos.jasper","Relação de pacientes");
     }
 
     public void onRelPacientes(ActionEvent actionEvent) {
-        GeradorRelatorios.gerarRelatorio("SELECT * FROM paciente ORDER BY pac_cidade", "rel_pacientes.jasper","Relação de pacientes");
+        JasperUtils.gerarRelatorio("SELECT * FROM paciente ORDER BY pac_cidade", "rel_pacientes.jasper","Relação de pacientes");
     }
 
     public void onRelAgenda(ActionEvent actionEvent) {
@@ -185,11 +171,11 @@ public class AgendamentoController implements Initializable {
                 ) c
                 JOIN paciente p ON p.pac_id = c.pac_id
                 """;
-        GeradorRelatorios.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
+        JasperUtils.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
     }
 
     public void onRelAtendimento(ActionEvent actionEvent) {
-        // individual. atendimento de um paciente.
+        GerenciadorTelas.carregar(new Stage(), Constantes.RELATORIO, "Gerenciamento de Procedimentos", "icone", true);
     }
 
     private void esconderRecursosAdmin() {

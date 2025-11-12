@@ -7,8 +7,12 @@ public class Conexao {
     private String erro;
 
     public Conexao() {
-        erro="";
+        erro = "";
         connect = null;
+    }
+
+    public Connection getConnection() {
+        return connect;
     }
 
     public boolean conectar(String local,String banco,String usuario,String senha) {

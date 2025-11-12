@@ -7,28 +7,29 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import matheus.bcc.dentalfx.db.dto.ConsultaDTO;
 import matheus.bcc.dentalfx.db.entidades.Paciente;
-import matheus.bcc.dentalfx.db.util.SingletonDB;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.view.JasperViewer;
 
 import java.awt.*;
 import java.io.File;
-import java.sql.ResultSet;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class GeradorPDF {
-    public static void imprimirFicha(Paciente paciente) {
+    public static void imprimirFicha(Paciente paciente,  List<ConsultaDTO> consultas) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                gerarPDF(paciente);
+                gerarPDF(paciente, consultas);
                 return null;
             }
 
@@ -41,73 +42,103 @@ public class GeradorPDF {
         new Thread(task).start();
     }
 
-    private static void gerarPDF(Paciente paciente) {
-        String dest = "src/main/resources/fichas/" + paciente.getNome().replace(" ", "").toLowerCase() + paciente.getCpf().replace(".", "").replace("-", "") + ".pdf";
-        PdfWriter writer;
+    private static void gerarPDF(Paciente paciente, List<ConsultaDTO> consultas) {
+        String destino = "src/main/resources/fichas/" + paciente.getNome().replace(" ", "").toLowerCase() + paciente.getCpf().replace(".", "").replace("-", "") + ".pdf";
         try {
-            writer = new PdfWriter(dest);
-
-            // Criando o documento  PDF
+            PdfWriter writer = new PdfWriter(destino);
             PdfDocument pdf = new PdfDocument(writer);
-
-            // Criando o Document
             Document doc = new Document(pdf);
 
-            //Definindo uma fonte grande
             PdfFont fonteTitulo = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
-            //Definindo um texto
-            Text titulo = new Text("Nome da Empresa");
-            titulo.setFont(fonteTitulo);
-            titulo.setFontSize(48);
-            //Definindo um parágrafo
-            Paragraph paragraph = new Paragraph(titulo);
-            //Adicionando o parágrafo
-            doc.add(paragraph);
+            PdfFont fonteBold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+            PdfFont fonteNormal = PdfFontFactory.createFont(FontConstants.HELVETICA);
 
-            // Criando a tabela com 3 colunas
-            float[] pointColumnWidths = {150F, 150F, 150F};
-            Table table = new Table(pointColumnWidths);
+            Text titulo = new Text("Ficha do Paciente");
+            titulo.setFont(fonteTitulo).setFontSize(24);
+            doc.add(new Paragraph(titulo).setTextAlignment(TextAlignment.CENTER));
 
-            // Adicionando celulas na tabela
-            table.addCell(new Cell().add("Nome").setBackgroundColor(Color.LIGHT_GRAY));
-            table.addCell(new Cell().add("Idade").setBackgroundColor(Color.LIGHT_GRAY));
-            table.addCell(new Cell().add("Profissão").setBackgroundColor(Color.LIGHT_GRAY));
-            table.addCell(new Cell().add("Jeniffer da Silva"));
-            table.addCell(new Cell().add("28"));
-            table.addCell(new Cell().add("Programadora"));
-            table.addCell(new Cell().add("Samanta Barros"));
-            table.addCell(new Cell().add("21"));
-            table.addCell(new Cell().add("Médica"));
+            doc.add(new Paragraph(" ").setFontSize(10));
+            doc.add(new Paragraph("Dados Pessoais").setFont(fonteBold).setFontSize(16));
 
-            // Adicionando a tabela no documento
-            doc.add(table);
+            Table tblDados = new Table(UnitValue.createPercentArray(new float[]{1, 3})).useAllAvailableWidth();
 
-            // Fechando o documento
+            adicionarDado(tblDados, "Nome Completo:", paciente.getNome(), fonteBold, fonteNormal);
+            adicionarDado(tblDados, "CPF:", paciente.getCpf(), fonteBold, fonteNormal);
+            adicionarDado(tblDados, "Telefone:", paciente.getFone(), fonteBold, fonteNormal);
+            adicionarDado(tblDados, "E-mail:", paciente.getEmail(), fonteBold, fonteNormal);
+
+            String endereco = String.format("%s, %s - %s, %s/%s",
+                    paciente.getRua(), paciente.getNumero(), paciente.getBairro(),
+                    paciente.getCidade(), paciente.getUf());
+            adicionarDado(tblDados, "Endereço:", endereco, fonteBold, fonteNormal);
+            adicionarDado(tblDados, "CEP:", paciente.getCep(), fonteBold, fonteNormal);
+
+            doc.add(tblDados);
+
+            doc.add(new Paragraph(" ").setFontSize(5));
+            doc.add(new Paragraph("Histórico Médico Relevante")
+                    .setFont(fonteBold)
+                    .setFontSize(16));
+
+            String historico = (paciente.getHistorico() == null || paciente.getHistorico().isEmpty())
+                    ? "Nenhum histórico médico relevante informado."
+                    : paciente.getHistorico();
+            doc.add(new Paragraph(historico).setFont(fonteNormal));
+
+            doc.add(new Paragraph(" ").setFontSize(10));
+
+            doc.add(new Paragraph("Histórico de Consultas")
+                    .setFont(fonteBold)
+                    .setFontSize(16)
+                    .setTextAlignment(TextAlignment.CENTER));
+
+            Table tblConsultas = new Table(UnitValue.createPercentArray(new float[]{2, 2, 3, 5}))
+                    .useAllAvailableWidth()
+                    .setMarginTop(10);
+
+            tblConsultas.addHeaderCell(new Cell().add(new Paragraph("Data")).setBackgroundColor(Color.LIGHT_GRAY).setFont(fonteBold));
+            tblConsultas.addHeaderCell(new Cell().add(new Paragraph("Horário")).setBackgroundColor(Color.LIGHT_GRAY).setFont(fonteBold));
+            tblConsultas.addHeaderCell(new Cell().add(new Paragraph("Dentista")).setBackgroundColor(Color.LIGHT_GRAY).setFont(fonteBold));
+            tblConsultas.addHeaderCell(new Cell().add(new Paragraph("Relato")).setBackgroundColor(Color.LIGHT_GRAY).setFont(fonteBold));
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            for (ConsultaDTO consulta : consultas) {
+                tblConsultas.addCell(new Cell().add(new Paragraph(consulta.getData().format(dtf))).setFont(fonteNormal));
+                tblConsultas.addCell(new Cell().add(new Paragraph(formatarHorario(consulta.getHorario()))).setFont(fonteNormal));
+                tblConsultas.addCell(new Cell().add(new Paragraph(consulta.getNomeDentista())).setFont(fonteNormal));
+                tblConsultas.addCell(new Cell().add(new Paragraph(consulta.getRelato())).setFont(fonteNormal));
+            }
+
+            if (!consultas.isEmpty())
+                doc.add(tblConsultas);
+            else {
+                Paragraph aviso = new Paragraph("Paciente não possui consultas registradas.")
+                        .setFont(fonteNormal)
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setMarginTop(10);
+                doc.add(aviso);
+            }
+
+
             doc.close();
-            System.out.println("documento criado..");
-
-            //abrindo e mostrando o PDF
-            Desktop.getDesktop().open(new File(dest));
+            Desktop.getDesktop().open(new File(destino));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void gerarRelatorio(String sql, String relat, String titulo) {
-        try {
-            //sql para obter os dados para o relatorio
-            ResultSet rs = SingletonDB.getConexao().consultar(sql);
-            //implementação da interface JRDataSource para DataSource ResultSet
-            JRResultSetDataSource jrRS = new JRResultSetDataSource(rs);
-            //chamando o relatório
-            String jasperPrint = JasperFillManager.fillReportToFile(relat,null, jrRS);
-            JasperViewer viewer = new JasperViewer(jasperPrint, false, false);
-            viewer.setExtendedState(JasperViewer.MAXIMIZED_BOTH);//maximizado
-            viewer.setTitle(titulo);//titulo do relatório
-            viewer.setVisible(true);
-        }
-        catch (Exception e) {
-            Alerta.exibirErro("Erro", e.getMessage());
-        }
+    private static String formatarHorario(int sequencia) {
+        return (sequencia + 8) + ":00";
+    }
+
+    private static void adicionarDado(Table table, String rotulo, String valor, PdfFont fonteRotulo, PdfFont fonteValor) {
+        table.addCell(new Cell().add(new Paragraph(rotulo))
+                .setFont(fonteRotulo)
+                .setBorder(Border.NO_BORDER)
+                .setPaddingRight(10));
+        table.addCell(new Cell().add(new Paragraph(valor != null ? valor : ""))
+                .setFont(fonteValor)
+                .setBorder(Border.NO_BORDER));
     }
 }
