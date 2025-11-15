@@ -3,6 +3,7 @@ package matheus.bcc.dentalfx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.Usuario;
+import matheus.bcc.dentalfx.db.repositorios.AgendaDAL;
 import matheus.bcc.dentalfx.db.util.Inicializador;
 import matheus.bcc.dentalfx.util.*;
 
@@ -12,6 +13,9 @@ public class DentalFXApplication extends Application {
         if (Inicializador.verificarConexao()) {
             boolean sucesso = LoginPanel.exibir();
             if (sucesso) {
+                AgendaDAL agendaDAL = new AgendaDAL();
+                agendaDAL.limparConsultas();
+
                 Sessao sessao = Sessao.getInstancia();
                 Usuario usuario = sessao.getUsuario();
                 switch (usuario.getNivel()) {

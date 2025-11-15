@@ -4,11 +4,13 @@ public class Horario {
     private int sequencia;
     private Paciente paciente;
     private Atendimento atendimento;
+    private boolean efetivado;
 
     public Horario(int sequencia, Paciente paciente) {
         this.sequencia = sequencia;
         this.paciente = paciente;
         atendimento = null;
+        efetivado = false;
     }
 
     public Horario(int sequencia) {
@@ -41,5 +43,13 @@ public class Horario {
 
     public void setAtendimento(Atendimento atendimento) {
         this.atendimento = atendimento;
+    }
+
+    public boolean isEfetivado() {
+        return efetivado;
+    }
+
+    public void setEfetivado(boolean efetivado) {
+        this.efetivado = efetivado;
     }
 }

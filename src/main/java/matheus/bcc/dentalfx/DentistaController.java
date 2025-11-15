@@ -34,6 +34,12 @@ public class DentistaController implements Initializable {
     public TableColumn<Atendimento.ProcItem, Integer> col_qtde_procedimento;
     public TextArea text_area;
     public Label label_boas_vindas;
+    public Button bt_adicionar_material;
+    public Button bt_subtrair_material;
+    public Button bt_adicionar_procedimento;
+    public Button bt_subtrair_procedimento;
+    public Button bt_efetivar_consulta;
+    public Button bt_cancelar_consulta;
 
     private Dentista dentista;
 
@@ -164,9 +170,9 @@ public class DentistaController implements Initializable {
             if (agendaDAL.efetivarConsulta(horario, data, dentista)) {
                 Alerta.exibirAlerta("Sucesso", "Atendimento efetivado com sucesso!");
                 carregarTabela();
+                modoEdicao(false);
             } else
                 Alerta.exibirErro("Erro", "Não foi possível efetivar o atendimento.");
-
         } else
             Alerta.exibirAlerta("Atenção", "Selecione um horário com paciente para efetivar.");
     }
@@ -229,6 +235,23 @@ public class DentistaController implements Initializable {
     }
 
     private void configurarTabelas() {
+        final String CLASSE_EFETIVADO = "consulta-efetivada";
+
+        tv_horarios.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Horario horario, boolean empty) {
+                super.updateItem(horario, empty);
+
+                if (horario == null || empty)
+                    getStyleClass().remove(CLASSE_EFETIVADO);
+                else if (horario.isEfetivado()) {
+                    if (!getStyleClass().contains(CLASSE_EFETIVADO))
+                        getStyleClass().add(CLASSE_EFETIVADO);
+                } else
+                    getStyleClass().remove(CLASSE_EFETIVADO);
+            }
+        });
+
         col_hora.setCellValueFactory(cellData -> {
             Horario horario = cellData.getValue();
             int hora = horario.getSequencia() + 8;
@@ -301,6 +324,7 @@ public class DentistaController implements Initializable {
             tv_materiais.setItems(FXCollections.observableArrayList(atendimento.getMaterialList()));
             tv_procedimentos.setItems(FXCollections.observableArrayList(atendimento.getProcedimentoList()));
 
+            modoEdicao(!horario.isEfetivado());
         } else {
             text_area.clear();
             tv_materiais.setItems(FXCollections.observableArrayList());
@@ -328,5 +352,19 @@ public class DentistaController implements Initializable {
             List<ConsultaDTO> listaConsultas = consultaDAL.buscarConsultasPorPaciente(paciente.getId());
             GeradorPDF.imprimirFicha(paciente, listaConsultas);
         }
+    }
+
+    private void modoEdicao(boolean habilitar) {
+        text_area.setEditable(habilitar);
+
+        cb_materiais.setDisable(!habilitar);
+        cb_procedimentos.setDisable(!habilitar);
+
+        bt_adicionar_material.setDisable(!habilitar);
+        bt_subtrair_material.setDisable(!habilitar);
+        bt_adicionar_procedimento.setDisable(!habilitar);
+        bt_adicionar_procedimento.setDisable(!habilitar);
+        bt_efetivar_consulta.setDisable(!habilitar);
+        bt_cancelar_consulta.setDisable(!habilitar);
     }
 }

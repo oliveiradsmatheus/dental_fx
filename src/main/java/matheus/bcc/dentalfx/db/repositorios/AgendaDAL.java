@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class AgendaDAL {
     public Agenda carregarAgenda(Dentista dentista, LocalDate data) {
         int id, sequencia;
+        boolean efetivado;
         Agenda agenda = new Agenda(dentista, data);
         String sql = "SELECT * FROM consulta WHERE con_data = '#1' and den_id = #2";
         sql = sql.replace("#1", data.toString());
@@ -19,7 +20,9 @@ public class AgendaDAL {
             while (rs.next()) {
                 id = rs.getInt("con_id");
                 sequencia = rs.getInt("con_horario");
+                efetivado = rs.getBoolean("con_efetivado");
                 Horario horario = new Horario( rs.getInt("con_horario"), (Paciente) new PessoaDAL().get(rs.getInt("pac_id"), new Paciente()));
+                horario.setEfetivado(efetivado);
                 if (rs.getBoolean("con_efetivado")) {
                     Atendimento atendimento = new Atendimento(rs.getString("con_relato"));
                     ResultSet rsMat = SingletonDB.getConexao().consultar("SELECT * FROM cons_mat WHERE con_id = " + id);
@@ -140,6 +143,6 @@ public class AgendaDAL {
     }
 
     public boolean limparConsultas() {
-        return SingletonDB.getConexao().manipular("DELETE FROM consulta WHERE con_data < CURRENT_DATE");
+        return SingletonDB.getConexao().manipular("DELETE FROM consulta WHERE con_data < CURRENT_DATE AND con_efetivado = FALSE");
     }
 }

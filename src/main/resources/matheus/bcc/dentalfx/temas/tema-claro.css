@@ -708,6 +708,9 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
+.table-row-cell.consulta-efetivada {
+    -fx-text-background-color: #909090;
+}
 .table-view .column-header .label {
     -fx-alignment: center;
     -fx-cursor: HAND;
