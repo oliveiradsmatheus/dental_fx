@@ -25,6 +25,4 @@ public class Constantes {
 
     public static final String FORM_USUARIO = "usuario-form-view.fxml";
     public static final String TABELA_USUARIO = "usuario-table-view.fxml";
-
-    public static final String RELATORIO = "relatorio-view.fxml";
 }

@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict e3sXyOb3wjKKjqPm6r44jTcDT4pBGBeQYV2o9ZBN6PavaxCuBlRsrnvI3UwZ9SG
+\restrict kJvA9lDkexG1ReB7YTXKI70Q3HaeeFGa70pA7fZrlw5OMG557aTeL8IXIrRcojS
 
 -- Dumped from database version 17.6 (Debian 17.6-0+deb13u1)
 -- Dumped by pg_dump version 17.6 (Debian 17.6-0+deb13u1)
 
--- Started on 2025-11-12 20:40:55 -03
+-- Started on 2025-11-15 17:23:31 -03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -428,10 +428,17 @@ ALTER TABLE ONLY public.usuario ALTER COLUMN uso_id SET DEFAULT nextval('public.
 --
 
 COPY public.cons_mat (cm_id, mat_id, con_id, cm_quant) FROM stdin;
-1	1	1	2
-2	2	1	1
-6	1	1	2
-7	2	1	1
+18	2	51	1
+19	20	51	1
+20	10	51	1
+21	13	51	1
+22	2	58	1
+23	13	58	1
+24	27	58	1
+25	35	62	1
+26	10	65	1
+27	13	65	1
+28	2	65	1
 \.
 
 
@@ -442,10 +449,11 @@ COPY public.cons_mat (cm_id, mat_id, con_id, cm_quant) FROM stdin;
 --
 
 COPY public.cons_proc (cp_is, con_id, pro_id, cp_quant) FROM stdin;
-1	1	1	2
-5	1	1	1
-26	1	1	1
-27	1	2	1
+28	51	18	1
+29	58	23	1
+30	58	1	1
+31	62	47	1
+32	65	25	1
 \.
 
 
@@ -456,12 +464,18 @@ COPY public.cons_proc (cp_is, con_id, pro_id, cp_quant) FROM stdin;
 --
 
 COPY public.consulta (con_id, con_relato, con_data, con_horario, pac_id, den_id, con_efetivado) FROM stdin;
-1	Limpeza de rotina	2025-11-30	9	1	1	t
-7	Limpeza de rotina	2025-11-10	6	1	1	f
-8	Aplicação de flúor	2025-11-11	3	1	1	f
-9	Avaliação de cárie	2025-11-12	2	1	1	f
-30		2025-11-11	0	2	6	f
-31		2025-11-11	0	2	7	f
+68		2025-11-15	8	1	6	f
+69		2025-11-15	4	2	6	f
+70		2025-11-16	6	8	6	f
+71		2025-11-15	5	18	21	f
+61		2025-11-15	0	33	1	f
+64		2025-11-15	6	17	1	f
+66		2025-11-15	8	32	1	f
+67		2025-11-15	9	33	1	f
+58	Tudo correu bem	2025-11-15	3	2	1	t
+62	Extração de terceiro molar em 2024. Recuperação ok.	2025-11-15	4	29	1	t
+65	Fez implante unitário em 2023. Revisão anual.	2025-11-15	7	23	1	t
+51	Primeiro canal, sem maiores problemas.	2025-11-14	2	3	1	t
 \.
 
 
@@ -481,7 +495,6 @@ COPY public.dentista (den_id, den_nome, den_cro, den_fone, den_email) FROM stdin
 12	Gabriela Tavares	78901	92988332211	gabriela.tavares@gmail.com
 13	Henrique Lopes Almeida	89012	55988774455	henrique.almeida@gmail.com
 14	Isabela Moura Santos	90123	86999887766	isabela.santos@icloud.com
-15	João Pedro Carvalho	1234	92988775544	joao.carvalho@gmail.com
 16	Karen Oliveira Dias	13579	86991112222	karen.dias@gmail.com
 17	Lucas Andrade Pereira	24680	92991223344	lucas.pereira@hotmail.com
 18	Mariana Costa Lima	11223	48998334455	mariana.lima@gmail.com
@@ -491,11 +504,13 @@ COPY public.dentista (den_id, den_nome, den_cro, den_fone, den_email) FROM stdin
 2	Matheus Firmino	12356	18992930458	matheus@email.com
 4	Márcia Silva e Silva	89712	12333333333	marcia@email.com
 5	Eufrásio Gomes	19928	11111111111	eufrasio@dent.com
-21	Ana Clara	2345	11999988877	ana.dentista@gmail.com
-22	Bruno Souza	3456	11988877766	bruno.dentista@gmail.com
-23	Carla Lima	4567	11977766655	carla.dentista@gmail.com
-24	Daniel Costa	5678	11966655544	daniel.dentista@gmail.com
-25	Elaine Rocha	6789	11955544433	elaine.dentista@gmail.com
+29	Caroline Nader	55664	18955886562	caroline.dentista@email.com
+15	João Pedro Carvalho	12345	92988775544	joao.carvalho@gmail.com
+21	Ana Clara	23455	11999988877	ana.dentista@gmail.com
+22	Bruno Souza	34562	11988877766	bruno.dentista@gmail.com
+23	Carla Lima	45672	11977766655	carla.dentista@gmail.com
+24	Daniel Costa	15678	11966655544	daniel.dentista@gmail.com
+25	Elaine Rocha	67891	11955544433	elaine.dentista@gmail.com
 \.
 
 
@@ -691,7 +706,7 @@ COPY public.usuario (uso_id, uso_nome, uso_nivel, uso_senha, den_id) FROM stdin;
 -- Name: cons_mat_cm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.cons_mat_cm_id_seq', 17, true);
+SELECT pg_catalog.setval('public.cons_mat_cm_id_seq', 28, true);
 
 
 --
@@ -700,7 +715,7 @@ SELECT pg_catalog.setval('public.cons_mat_cm_id_seq', 17, true);
 -- Name: cons_proc_cp_is_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.cons_proc_cp_is_seq', 27, true);
+SELECT pg_catalog.setval('public.cons_proc_cp_is_seq', 32, true);
 
 
 --
@@ -709,7 +724,7 @@ SELECT pg_catalog.setval('public.cons_proc_cp_is_seq', 27, true);
 -- Name: consulta_con_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.consulta_con_id_seq', 31, true);
+SELECT pg_catalog.setval('public.consulta_con_id_seq', 71, true);
 
 
 --
@@ -718,7 +733,7 @@ SELECT pg_catalog.setval('public.consulta_con_id_seq', 31, true);
 -- Name: dentista_den_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.dentista_den_id_seq', 28, true);
+SELECT pg_catalog.setval('public.dentista_den_id_seq', 29, true);
 
 
 --
@@ -892,11 +907,11 @@ ALTER TABLE ONLY public.usuario
     ADD CONSTRAINT fk_usuario_dentista FOREIGN KEY (den_id) REFERENCES public.dentista(den_id);
 
 
--- Completed on 2025-11-12 20:40:55 -03
+-- Completed on 2025-11-15 17:23:31 -03
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict e3sXyOb3wjKKjqPm6r44jTcDT4pBGBeQYV2o9ZBN6PavaxCuBlRsrnvI3UwZ9SG
+\unrestrict kJvA9lDkexG1ReB7YTXKI70Q3HaeeFGa70pA7fZrlw5OMG557aTeL8IXIrRcojS
 

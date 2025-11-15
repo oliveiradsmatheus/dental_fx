@@ -17,7 +17,7 @@ public class GerenciadorTemas {
     private static final String PREF_KEY = "modoEscuro";
 
     static {
-        modoEscuro = prefs.getBoolean(PREF_KEY, true); // tema padrão
+        modoEscuro = prefs.getBoolean(PREF_KEY, true);
     }
 
     public static void registrar(Scene cena) {

@@ -21,9 +21,7 @@ import matheus.bcc.dentalfx.util.*;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AgendamentoController implements Initializable {
@@ -210,7 +208,10 @@ public class AgendamentoController implements Initializable {
     }
 
     public void onRelAgenda(ActionEvent actionEvent) {
-        LocalDate data = datePicker();
+        dialogoRelatorioAgenda();
+    }
+
+    private void gerarRelatorioAgenda(LocalDate data) {
         if (data != null) {
             String sql = String.format("""
                 SELECT c.con_relato, c.con_horario, c.pac_id, c.con_efetivado, c.den_nome, p.pac_nome FROM (
@@ -221,21 +222,19 @@ public class AgendamentoController implements Initializable {
                 JOIN paciente p ON p.pac_id = c.pac_id
                 """, data);
             JasperUtils.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
-        }
+        } else
+            Alerta.exibirAlerta("Erro", "Selecione a data.");
     }
 
-    private LocalDate datePicker() {
+    private LocalDate dialogoRelatorioAgenda() {
         AtomicReference<LocalDate> dataSelecionada = new AtomicReference<>();
-
         Stage stage = new Stage();
-        stage.setTitle("Selecionar Data");
-        stage.initModality(Modality.APPLICATION_MODAL);
 
         Label label = new Label("Selecione a data para o relatório:");
         label.setWrapText(true);
         label.setAlignment(Pos.CENTER);
 
-        DatePicker datePicker = new DatePicker();
+        DatePicker datePicker = new DatePicker(LocalDate.now());
         datePicker.setMaxWidth(Double.MAX_VALUE);
 
         Button bt_confirmar = new Button("Ver agenda do dia");
@@ -252,28 +251,114 @@ public class AgendamentoController implements Initializable {
 
         bt_confirmar.setDefaultButton(true);
         bt_confirmar.setOnAction(e -> {
-            dataSelecionada.set(datePicker.getValue());
+            gerarRelatorioAgenda(datePicker.getValue());
             stage.hide();
         });
 
         bt_cancelar.setCancelButton(true);
-        bt_cancelar.setOnAction(e -> {
-            dataSelecionada.set(null);
-            stage.hide();
-        });
+        bt_cancelar.setOnAction(e -> stage.hide());
 
         Scene scene = new Scene(vbox);
         GerenciadorTemas.registrar(scene);
         stage.setScene(scene);
 
+        stage.setTitle("Selecionar Data");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icones/icone.png")));
-
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+
         return dataSelecionada.get();
     }
 
     public void onRelAtendimento(ActionEvent actionEvent) {
-        GerenciadorTelas.carregar(new Stage(), Constantes.RELATORIO, "Gerenciamento de Procedimentos", "icone", true);
+        dialogoRelatorioAtendimento();
+    }
+
+    private boolean gerarRelatorioAtendimento(Dentista dentista, LocalDate dataInicial, LocalDate dataFinal) {
+        boolean camposValidos = dentista != null && dataInicial != null && dataFinal != null;
+        boolean datasValidas = camposValidos && (dataInicial.isBefore(dataFinal) || dataInicial.isEqual(dataFinal));
+
+        if (camposValidos && datasValidas) {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("P_DENTISTA_ID", dentista.getId());
+            parametros.put("P_DATA_INICIAL", java.sql.Date.valueOf(dataInicial));
+            parametros.put("P_DATA_FINAL", java.sql.Date.valueOf(dataFinal));
+
+            JasperUtils.gerarRelatorio("rel_consultas.jasper", "Relatório de Consultas", parametros);
+            return true;
+        } else {
+            Alerta.exibirErro("Erro", "Todos os campos devem ser preenchidos corretamente.");
+            return false;
+        }
+    }
+
+    private void dialogoRelatorioAtendimento() {
+        Stage stage = new Stage();
+
+        Label titulo = new Label("Histórico de Consultas");
+        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        Label label_dentista = new Label("Selecione um dentista");
+        ComboBox<Pessoa> cb_dentista = new ComboBox<>();
+        cb_dentista.setPrefWidth(440);
+
+        Label label_data_inicial = new Label("Data inicial");
+        DatePicker dp_inicial = new DatePicker();
+        dp_inicial.setMaxWidth(Double.MAX_VALUE);
+
+        Label label_data_final = new Label("Data final");
+        DatePicker dp_final = new DatePicker();
+        dp_final.setMaxWidth(Double.MAX_VALUE);
+
+        Button bt_gerar = new Button("Gerar relatório");
+        Button bt_cancelar = new Button("Cancelar");
+
+        VBox vbox_dentista = new VBox(8, label_dentista, cb_dentista);
+        vbox_dentista.setAlignment(Pos.CENTER);
+
+        VBox vbox_data_inicial = new VBox(8, label_data_inicial, dp_inicial);
+        vbox_data_inicial.setAlignment(Pos.CENTER);
+
+        VBox vbox_data_final = new VBox(8, label_data_final, dp_final);
+        vbox_data_final.setAlignment(Pos.CENTER);
+
+        HBox hbox_botoes = new HBox(30, bt_gerar, bt_cancelar);
+        hbox_botoes.setAlignment(Pos.CENTER);
+
+        VBox vbox = new VBox(24, titulo, vbox_dentista, vbox_data_inicial, vbox_data_final, hbox_botoes);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setMinWidth(480);
+        vbox.setMinHeight(480);
+        vbox.setPadding(new Insets(24));
+
+        PessoaDAL pessoaDAL = new PessoaDAL();
+        List<Pessoa> dentistas = pessoaDAL.get("", new Dentista());
+        dentistas.sort(Comparator.comparing(Pessoa::getNome));
+        FXUtils.configurarComboBox(cb_dentista, dentistas, "Selecione um dentista", Pessoa::getNome);
+
+        dp_inicial.setValue(LocalDate.now());
+        dp_final.setValue(LocalDate.now());
+
+        bt_gerar.setDefaultButton(true);
+        bt_gerar.setOnAction(e -> {
+            Dentista dentista = (Dentista) cb_dentista.getSelectionModel().getSelectedItem();
+            LocalDate dataInicial = dp_inicial.getValue();
+            LocalDate dataFinal = dp_final.getValue();
+
+            if (gerarRelatorioAtendimento(dentista, dataInicial, dataFinal))
+                stage.hide();
+        });
+
+        bt_cancelar.setCancelButton(true);
+        bt_cancelar.setOnAction(e -> stage.hide());
+
+        Scene scene = new Scene(vbox);
+        GerenciadorTemas.registrar(scene);
+        stage.setScene(scene);
+
+        stage.setTitle("Relatório de Consultas");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icones/icone.png")));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
     }
 
     private void esconderRecursosAdmin() {

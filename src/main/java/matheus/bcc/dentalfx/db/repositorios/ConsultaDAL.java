@@ -1,8 +1,8 @@
 package matheus.bcc.dentalfx.db.repositorios;
 
+import matheus.bcc.dentalfx.db.dto.ConsultaDTO;
 import matheus.bcc.dentalfx.db.util.SingletonDB;
 import matheus.bcc.dentalfx.util.Alerta;
-import matheus.bcc.dentalfx.db.dto.ConsultaDTO;
 
 import java.sql.ResultSet;
 import java.time.LocalDate;

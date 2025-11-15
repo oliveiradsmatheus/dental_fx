@@ -15,7 +15,7 @@ public class HelpController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         WebEngine webEngine = web_view.getEngine();
         webEngine.setJavaScriptEnabled(true);
-        File file = new File("ajuda/main.html");
+        File file = new File("ajuda/ajuda.html");
         webEngine.load(file.toURI().toString());
     }
 }

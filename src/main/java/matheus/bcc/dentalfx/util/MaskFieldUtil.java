@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class MaskFieldUtil {
-
     private static List<KeyCode> ignoreKeyCodes = new ArrayList<>();
 
     public static void ignoreKeys(TextField textField) {
@@ -30,7 +29,7 @@ public abstract class MaskFieldUtil {
         });
     }
 
-    //xxxxx-xxxxx-xxxxx-xxxxx
+    // xxxxx-xxxxx-xxxxx-xxxxx
     public static void serialTextField(final TextField textField) {
         MaskFieldUtil.maxField(textField, 23);
         textField.lengthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {

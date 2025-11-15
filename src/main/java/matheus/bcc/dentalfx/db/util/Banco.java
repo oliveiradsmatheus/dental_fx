@@ -2,7 +2,6 @@ package matheus.bcc.dentalfx.db.util;
 
 import matheus.bcc.dentalfx.util.Alerta;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
