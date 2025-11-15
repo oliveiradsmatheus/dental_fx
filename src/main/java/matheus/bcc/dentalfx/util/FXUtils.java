@@ -43,10 +43,8 @@ public class FXUtils {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                if (date.isBefore(LocalDate.now())) {
+                if (date.isBefore(LocalDate.now()))
                     setDisable(true);
-                    setStyle("-fx-background-color: #EEEEEE;");
-                }
             }
         });
         datePicker.setValue(LocalDate.now());
