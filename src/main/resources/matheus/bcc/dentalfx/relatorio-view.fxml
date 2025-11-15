@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <VBox alignment="CENTER" prefHeight="480.0" prefWidth="480.0" spacing="24.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="matheus.bcc.dentalfx.RelatorioController">
     <children>
         <Label layoutX="183.0" layoutY="71.0" text="Historico de Consultas">
@@ -33,6 +38,11 @@
                 <DatePicker fx:id="dp_final" />
             </children>
         </VBox>
-        <Button mnemonicParsing="false" onAction="#onGerarRelatorio" text="Gerar relatorio" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+         <children>
+              <Button mnemonicParsing="false" onAction="#onGerarRelatorio" text="Gerar relatorio" />
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCancelar" text="Cancelar" />
+         </children>
+      </HBox>
     </children>
 </VBox>

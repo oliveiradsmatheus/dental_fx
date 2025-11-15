@@ -4,7 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.*;
 import matheus.bcc.dentalfx.db.repositorios.AgendaDAL;
@@ -17,11 +24,12 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AgendamentoController implements Initializable {
     public DatePicker dp_dia_consulta;
     public ComboBox<Pessoa> cb_dentista;
-    public TableView table_view;
+    public TableView<Horario> table_view;
     public TableColumn<Horario, String> col_hora;
     public TableColumn<Horario, String> col_paciente;
     public MenuItem menu_item_usuario;
@@ -76,13 +84,7 @@ public class AgendamentoController implements Initializable {
     }
 
     public void onAgendar(ActionEvent actionEvent) {
-        Horario horario = (Horario) table_view.getSelectionModel().getSelectedItem();
-
-        if (horario == null)
-            Alerta.exibirErro("Erro", "Selecione um horario");
-        else if (horario.getPaciente() != null)
-            Alerta.exibirErro("Erro", "Horário indisponível");
-        else {
+        if (validarAgendamento()) {
             int indice = table_view.getSelectionModel().getSelectedIndex();
             Dentista dentista = (Dentista) cb_dentista.getValue();
             LocalDate data = dp_dia_consulta.getValue();
@@ -94,14 +96,59 @@ public class AgendamentoController implements Initializable {
                     true,
                     (AgendamentoFormController controller) -> controller.carregarDados(indice, dentista, data)
             );
+
+            carregarTabela();
         }
     }
 
+    private boolean validarAgendamento() {
+        Horario horario = table_view.getSelectionModel().getSelectedItem();
+        boolean valido = true;
+        if (horario == null) {
+            Alerta.exibirErro("Erro", "Selecione um horario");
+            valido = false;
+        } else if (horario.getPaciente() != null) {
+            Alerta.exibirErro("Erro", "Horário indisponível");
+            valido = false;
+        }
+        return valido;
+    }
+
+    public void cancelarConsulta(int indice, Dentista dentista, LocalDate data) {
+        AgendaDAL agendaDAL = new AgendaDAL();
+        Agenda agenda =  agendaDAL.carregarAgenda(dentista, data);
+        Horario horario = agenda.getHorario(indice);
+
+        horario.setAtendimento(null);
+        horario.setPaciente(null);
+        agenda.setHorario(indice, horario);
+
+        agendaDAL.salvarAgenda(agenda);
+    }
+
     public void onCancelarAgendamento(ActionEvent actionEvent) {
-        if (Alerta.exibirConfirmacao("testess","teste"))
-            Alerta.exibirErro("", "Confirmado");
-        else
-            Alerta.exibirErro("", "Não Confirmado");
+        if (validarCancelamento()) {
+            int indice = table_view.getSelectionModel().getSelectedIndex();
+            Dentista dentista = (Dentista) cb_dentista.getValue();
+            LocalDate data = dp_dia_consulta.getValue();
+
+            cancelarConsulta(indice, dentista, data);
+
+            carregarTabela();
+        }
+    }
+
+    private boolean validarCancelamento() {
+        Horario horario = table_view.getSelectionModel().getSelectedItem();
+        boolean valido = true;
+        if (horario == null) {
+            Alerta.exibirErro("Erro", "Selecione um horario");
+            valido = false;
+        } else if (horario.getPaciente() == null) {
+            Alerta.exibirErro("Erro", "Horário não ocupado");
+            valido = false;
+        }
+        return valido;
     }
 
     private void configurarCB() {
@@ -163,15 +210,66 @@ public class AgendamentoController implements Initializable {
     }
 
     public void onRelAgenda(ActionEvent actionEvent) {
-        String sql = """
+        LocalDate data = datePicker();
+        if (data != null) {
+            String sql = String.format("""
                 SELECT c.con_relato, c.con_horario, c.pac_id, c.con_efetivado, c.den_nome, p.pac_nome FROM (
                 	SELECT c.con_relato, c.con_horario, c.pac_id, c.con_efetivado, d.den_nome FROM consulta c
                 	JOIN dentista d ON c.den_id = d.den_id
-                	WHERE con_data = CURRENT_DATE
+                	WHERE con_data = '%s'
                 ) c
                 JOIN paciente p ON p.pac_id = c.pac_id
-                """;
-        JasperUtils.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
+                """, data);
+            JasperUtils.gerarRelatorio(sql, "rel_agenda.jasper","Agenda do dia");
+        }
+    }
+
+    private LocalDate datePicker() {
+        AtomicReference<LocalDate> dataSelecionada = new AtomicReference<>();
+
+        Stage stage = new Stage();
+        stage.setTitle("Selecionar Data");
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label label = new Label("Selecione a data para o relatório:");
+        label.setWrapText(true);
+        label.setAlignment(Pos.CENTER);
+
+        DatePicker datePicker = new DatePicker();
+        datePicker.setMaxWidth(Double.MAX_VALUE);
+
+        Button bt_confirmar = new Button("Ver agenda do dia");
+        Button bt_cancelar = new Button("Cancelar");
+
+        HBox hboxBotoes = new HBox(32, bt_confirmar, bt_cancelar);
+        hboxBotoes.setAlignment(Pos.CENTER);
+
+        VBox vbox = new VBox(32, label, datePicker, hboxBotoes);
+        vbox.setPadding(new Insets(30));
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setMinWidth(400);
+        vbox.setMinHeight(226);
+
+        bt_confirmar.setDefaultButton(true);
+        bt_confirmar.setOnAction(e -> {
+            dataSelecionada.set(datePicker.getValue());
+            stage.hide();
+        });
+
+        bt_cancelar.setCancelButton(true);
+        bt_cancelar.setOnAction(e -> {
+            dataSelecionada.set(null);
+            stage.hide();
+        });
+
+        Scene scene = new Scene(vbox);
+        GerenciadorTemas.registrar(scene);
+        stage.setScene(scene);
+
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icones/icone.png")));
+
+        stage.showAndWait();
+        return dataSelecionada.get();
     }
 
     public void onRelAtendimento(ActionEvent actionEvent) {

@@ -25,8 +25,7 @@ public class RelatorioController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configurarCB();
-        dp_inicial.setValue(LocalDate.now());
-        dp_final.setValue(LocalDate.now());
+        configurarDP();
     }
 
     private void configurarCB() {
@@ -34,6 +33,11 @@ public class RelatorioController implements Initializable {
         List<Pessoa> dentistas = pessoaDAL.get("", new Dentista());
         dentistas.sort(Comparator.comparing(Pessoa::getNome));
         FXUtils.configurarComboBox(cb_dentista, dentistas, "Selecione um dentista", Pessoa::getNome);
+    }
+
+    private void configurarDP() {
+        dp_inicial.setValue(LocalDate.now());
+        dp_final.setValue(LocalDate.now());
     }
 
     public void onGerarRelatorio(ActionEvent actionEvent) {
@@ -55,5 +59,9 @@ public class RelatorioController implements Initializable {
 
     private boolean validarCampos() {
         return cb_dentista.getSelectionModel().getSelectedItem() != null && (dp_inicial.getValue().isBefore(dp_final.getValue()) || dp_inicial.getValue().isEqual(dp_final.getValue()));
+    }
+
+    public void onCancelar(ActionEvent actionEvent) {
+        cb_dentista.getScene().getWindow().hide();
     }
 }

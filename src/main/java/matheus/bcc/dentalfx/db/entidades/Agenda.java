@@ -22,7 +22,7 @@ public class Agenda {
     }
 
     public Horario getHorario(int sequencia) {
-        return horarioList.get(sequencia - 1); // Assumindo que o primeiro horário é o horario 1
+        return horarioList.get(sequencia);
     }
 
     public Pessoa getDentista() {

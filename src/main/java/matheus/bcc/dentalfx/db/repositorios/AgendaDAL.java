@@ -40,36 +40,41 @@ public class AgendaDAL {
 
     public boolean salvarAgenda(Agenda agenda) {
         boolean resultado = true;
-        String sql = "SELECT con_id FROM consulta WHERE con_data = '#1' AND den_id = #2 AND con_horario = #3";
-        sql = sql.replace("#1", agenda.getData().toString());
-        sql = sql.replace("#2", "" + agenda.getDentista().getId());
+        String sqlConsulta = "SELECT * FROM consulta WHERE con_data = '#1' AND den_id = #2 AND con_horario = #3";
+        sqlConsulta = sqlConsulta.replace("#1", agenda.getData().toString());
+        sqlConsulta = sqlConsulta.replace("#2", "" + agenda.getDentista().getId());
         try {
             for (Horario horario : agenda.getHorarioList()) {
-                int id = -1; // Atribui id inexistente para consulta no banco
+                int id = -1, seq = -1;
+
+                String sql = sqlConsulta;
                 sql = sql.replace("#3", "" + horario.getSequencia());
                 ResultSet rs = SingletonDB.getConexao().consultar(sql);
-                if (rs.next()) // Já está no banco
-                    id = rs.getInt("con_id"); // Se existe no banco, resgata o id
-                if (horario.getPaciente() != null) { // Existe no banco e no objeto, mas pode ter havido alguma alteração.
+
+                if (rs.next())
+                    id = rs.getInt("con_id");
+
+                if (horario.getPaciente() != null) {
                     Atendimento atendimento = horario.getAtendimento();
                     boolean efetivado = false;
                     if (id == -1) {
-                        // Não existe no banco, dou insert e marco como efetivado true;
-                    } else {
-                        // Se  existe, altero
+                        String insertSql = "INSERT INTO public.consulta(" +
+                                "con_relato, con_data, con_horario, pac_id, den_id, con_efetivado)" +
+                                "VALUES ('#1', '#2', #3, #4, #5, #6);";
+                        insertSql = insertSql.replace("#1", "");
+                        insertSql = insertSql.replace("#2", "" + agenda.getData());
+                        insertSql = insertSql.replace("#3", "" + horario.getSequencia());
+                        insertSql = insertSql.replace("#4", "" + horario.getPaciente().getId());
+                        insertSql = insertSql.replace("#5", "" + agenda.getDentista().getId());
+                        insertSql = insertSql.replace("#6", "FALSE");
+                        return SingletonDB.getConexao().manipular(insertSql);
                     }
-
-                    if (efetivado) { // se tudo correu bem, adicionar materiais
-                        // deletar materiais e procedimentos antigos
-                        // inserir materiais e procedimentos novos
-                    }
-
                 } else { // Se existe no banco mas não existe no objeto, foi um cancelamento
-                    /*if (id != -1) {
-                        resultado &= SingletonDB.getConexao().manipular("DELETE FROM cons_mat WHERE con_id = " + id);
+                    if (id != -1) {
+                        resultado = SingletonDB.getConexao().manipular("DELETE FROM cons_mat WHERE con_id = " + id);
                         resultado &= SingletonDB.getConexao().manipular("DELETE FROM cons_proc WHERE con_id = " + id);
                         resultado &= SingletonDB.getConexao().manipular("DELETE FROM consulta WHERE con_id = " + id);
-                    }*/
+                    }
                 }
             }
         } catch (Exception e) {
@@ -79,7 +84,62 @@ public class AgendaDAL {
         return resultado;
     }
 
-    public boolean efetivarConsulta(Dentista dentista, LocalDate data) {
-        return true;
+    public boolean efetivarConsulta(Horario horario, LocalDate data, Dentista dentista) {
+        int idConsulta = -1;
+        String sqlConsulta = "SELECT * FROM consulta WHERE con_data = '#1' AND den_id = #2 AND con_horario = #3";
+        sqlConsulta = sqlConsulta.replace("#1", data.toString());
+        sqlConsulta = sqlConsulta.replace("#2", "" + dentista.getId());
+        sqlConsulta = sqlConsulta.replace("#3", "" + horario.getSequencia());
+
+        try {
+            ResultSet rs = SingletonDB.getConexao().consultar(sqlConsulta);
+            if (rs.next())
+                idConsulta = rs.getInt("con_id");
+            else {
+                Alerta.exibirErro("Erro", "Consulta não encontrada no banco de dados.");
+                return false;
+            }
+            String sqlUpdate = "UPDATE consulta SET con_relato = '#1', con_efetivado = TRUE WHERE con_id = #2";
+            String relato = "";
+
+            if (horario.getAtendimento().getRelato() != null)
+                relato = horario.getAtendimento().getRelato();
+            sqlUpdate = sqlUpdate.replace("#1", relato);
+            sqlUpdate = sqlUpdate.replace("#2", "" + idConsulta);
+            if (SingletonDB.getConexao().manipular(sqlUpdate)) {
+                Atendimento atendimento = horario.getAtendimento();
+
+                for (Atendimento.MatItem item : atendimento.getMaterialList()) {
+                    String sqlInsertMat = "INSERT INTO cons_mat (con_id, mat_id, cm_quant) VALUES (#1, #2, #3)";
+                    sqlInsertMat = sqlInsertMat.replace("#1", "" + idConsulta);
+                    sqlInsertMat = sqlInsertMat.replace("#2", "" + item.material().getId());
+                    sqlInsertMat = sqlInsertMat.replace("#3", "" + item.quant());
+
+                    if (!SingletonDB.getConexao().manipular(sqlInsertMat))
+                        Alerta.exibirErro("Erro", "Erro ao inserir materiais da consulta.");
+                }
+
+                for (Atendimento.ProcItem item : atendimento.getProcedimentoList()) {
+                    String sqlInsertProc = "INSERT INTO cons_proc (con_id, pro_id, cp_quant) VALUES (#1, #2, #3)";
+                    sqlInsertProc = sqlInsertProc.replace("#1", "" + idConsulta);
+                    sqlInsertProc = sqlInsertProc.replace("#2", "" + item.procedimento().getId());
+                    sqlInsertProc = sqlInsertProc.replace("#3", "" + item.quant());
+
+                    if (!SingletonDB.getConexao().manipular(sqlInsertProc))
+                        Alerta.exibirErro("Erro", "Erro ao inserir procedimentos da consulta.");
+                }
+            } else {
+                Alerta.exibirErro("Erro", "Erro ao atualizar o status da consulta.");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            Alerta.exibirErro("Erro ao realizar consulta", "Erro: " +  e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean limparConsultas() {
+        return SingletonDB.getConexao().manipular("DELETE FROM consulta WHERE con_data < CURRENT_DATE");
     }
 }

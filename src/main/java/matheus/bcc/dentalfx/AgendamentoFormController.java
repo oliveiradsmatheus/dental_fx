@@ -72,12 +72,20 @@ public class AgendamentoFormController implements Initializable {
     }
 
     public void onConfirmar(ActionEvent actionEvent) {
-        AgendaDAL agendaDAL = new AgendaDAL();
-        Horario horario = new Horario();
+        if (validarCampos()) {
+            AgendaDAL agendaDAL = new AgendaDAL();
+            Paciente paciente = (Paciente) table_view.getSelectionModel().getSelectedItem();
+            Horario horario = new Horario(indice, paciente);
 
-        Agenda agenda = agendaDAL.carregarAgenda(dentista, data);
-        agenda.setHorario(indice, horario);
-        agendaDAL.salvarAgenda(agenda);
+            Agenda agenda = agendaDAL.carregarAgenda(dentista, data);
+            agenda.setHorario(indice, horario);
+            agendaDAL.salvarAgenda(agenda);
+            table_view.getScene().getWindow().hide();
+        }
+    }
+
+    private boolean validarCampos() {
+        return table_view.getSelectionModel().getSelectedItem() != null;
     }
 
     public void onCancelar(ActionEvent actionEvent) {

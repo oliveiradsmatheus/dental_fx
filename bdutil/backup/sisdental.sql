@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict 1gMIXYUZ2BPCZUCW81vtqa325pil9s0lD6SCPu9P2v0Ihcm5CPEg3AmfezTloZD
+\restrict e3sXyOb3wjKKjqPm6r44jTcDT4pBGBeQYV2o9ZBN6PavaxCuBlRsrnvI3UwZ9SG
 
 -- Dumped from database version 17.6 (Debian 17.6-0+deb13u1)
 -- Dumped by pg_dump version 17.6 (Debian 17.6-0+deb13u1)
 
--- Started on 2025-11-11 09:56:14 -03
+-- Started on 2025-11-12 20:40:55 -03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -460,6 +460,8 @@ COPY public.consulta (con_id, con_relato, con_data, con_horario, pac_id, den_id,
 7	Limpeza de rotina	2025-11-10	6	1	1	f
 8	Aplicação de flúor	2025-11-11	3	1	1	f
 9	Avaliação de cárie	2025-11-12	2	1	1	f
+30		2025-11-11	0	2	6	f
+31		2025-11-11	0	2	7	f
 \.
 
 
@@ -707,7 +709,7 @@ SELECT pg_catalog.setval('public.cons_proc_cp_is_seq', 27, true);
 -- Name: consulta_con_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.consulta_con_id_seq', 29, true);
+SELECT pg_catalog.setval('public.consulta_con_id_seq', 31, true);
 
 
 --
@@ -890,11 +892,11 @@ ALTER TABLE ONLY public.usuario
     ADD CONSTRAINT fk_usuario_dentista FOREIGN KEY (den_id) REFERENCES public.dentista(den_id);
 
 
--- Completed on 2025-11-11 09:56:14 -03
+-- Completed on 2025-11-12 20:40:55 -03
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1gMIXYUZ2BPCZUCW81vtqa325pil9s0lD6SCPu9P2v0Ihcm5CPEg3AmfezTloZD
+\unrestrict e3sXyOb3wjKKjqPm6r44jTcDT4pBGBeQYV2o9ZBN6PavaxCuBlRsrnvI3UwZ9SG
 

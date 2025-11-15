@@ -70,17 +70,17 @@ ORDER BY
 	<group name="G_Dentista">
 		<expression><![CDATA[$F{den_id}]]></expression>
 		<groupHeader>
-			<band height="55"/>
+			<band/>
 		</groupHeader>
 	</group>
 	<group name="G_Consulta">
 		<expression><![CDATA[$F{con_id}]]></expression>
 		<groupHeader>
-			<band height="95">
-				<element kind="frame" uuid="5ef5829e-8b0b-401e-afae-916edd1ce75c" mode="Opaque" x="0" y="10" width="555" height="20" backcolor="#E0E0E0">
+			<band height="80">
+				<element kind="frame" uuid="5ef5829e-8b0b-401e-afae-916edd1ce75c" mode="Opaque" x="0" y="60" width="555" height="20" backcolor="#E0E0E0">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				</element>
-				<element kind="staticText" uuid="797825d0-9ce4-44a6-be86-c2ba3186c3d9" x="0" y="10" width="105" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<element kind="staticText" uuid="797825d0-9ce4-44a6-be86-c2ba3186c3d9" x="0" y="60" width="105" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Tipo Item]]></text>
 					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -90,7 +90,7 @@ ORDER BY
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 				</element>
-				<element kind="frame" uuid="9c193af4-2a62-4355-9ee0-d2616a695d30" mode="Opaque" x="0" y="-60" width="555" height="60" backcolor="#E0E0E0">
+				<element kind="frame" uuid="9c193af4-2a62-4355-9ee0-d2616a695d30" mode="Opaque" x="0" y="0" width="555" height="60" backcolor="#E0E0E0">
 					<element kind="staticText" uuid="cf821c9a-5f04-44cc-8041-94bc028f28f1" x="5" y="5" width="40" height="15" forecolor="#006699" fontSize="9.0" bold="true" vTextAlign="Middle">
 						<text><![CDATA[Data:]]></text>
 					</element>
@@ -122,7 +122,7 @@ ORDER BY
 						<expression><![CDATA[$F{con_efetivado} ? "Sim" : "Não"]]></expression>
 					</element>
 				</element>
-				<element kind="staticText" uuid="0e8085d5-263a-4467-8e1e-b9691b000ef1" x="105" y="10" width="225" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<element kind="staticText" uuid="0e8085d5-263a-4467-8e1e-b9691b000ef1" x="105" y="60" width="225" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Descrição]]></text>
 					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -132,7 +132,7 @@ ORDER BY
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 				</element>
-				<element kind="staticText" uuid="4c2fa621-e042-49da-a25e-3c22d7a22a36" x="330" y="10" width="50" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<element kind="staticText" uuid="4c2fa621-e042-49da-a25e-3c22d7a22a36" x="330" y="60" width="50" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Qtd]]></text>
 					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -142,7 +142,7 @@ ORDER BY
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 				</element>
-				<element kind="staticText" uuid="e612fa5b-e44b-4f90-8ed1-f5b21d7b1a6c" x="380" y="10" width="80" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<element kind="staticText" uuid="e612fa5b-e44b-4f90-8ed1-f5b21d7b1a6c" x="380" y="60" width="80" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Vl. Unit.]]></text>
 					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -152,7 +152,7 @@ ORDER BY
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 				</element>
-				<element kind="staticText" uuid="d939ddc1-9ba6-4993-9c86-4f40f090b8f1" x="460" y="10" width="95" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<element kind="staticText" uuid="d939ddc1-9ba6-4993-9c86-4f40f090b8f1" x="460" y="60" width="95" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Vl. Total]]></text>
 					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -167,16 +167,16 @@ ORDER BY
 		<groupFooter>
 			<band height="30">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
-				<element kind="staticText" uuid="8843ce2f-06d2-4309-8d14-b6c810d7967b" x="350" y="-60" width="110" height="20" forecolor="#006699" fontSize="11.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+				<element kind="staticText" uuid="8843ce2f-06d2-4309-8d14-b6c810d7967b" x="350" y="0" width="110" height="20" forecolor="#006699" fontSize="11.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<text><![CDATA[Total da Consulta:]]></text>
 				</element>
-				<element kind="textField" uuid="4c1c9c7c-4712-4cf4-9de6-e3d8f289d023" x="460" y="-60" width="95" height="20" forecolor="#006699" fontSize="11.0" pattern="R$ #,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+				<element kind="textField" uuid="4c1c9c7c-4712-4cf4-9de6-e3d8f289d023" x="460" y="0" width="95" height="20" forecolor="#006699" fontSize="11.0" pattern="R$ #,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<expression><![CDATA[$V{V_TOTAL_CONSULTA}]]></expression>
 					<box rightPadding="2"/>
 				</element>
-				<element kind="line" uuid="8c2196bc-5ab5-46c5-9b2f-2d7c48f2294e" x="0" y="-38" width="555" height="1">
+				<element kind="line" uuid="8c2196bc-5ab5-46c5-9b2f-2d7c48f2294e" x="0" y="22" width="555" height="1">
 					<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 					<pen lineStyle="Dashed" lineColor="#999999"/>
 				</element>
@@ -219,7 +219,7 @@ ORDER BY
 	<detail>
 		<band height="20" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{tipo_item} != null]]></printWhenExpression>
-			<element kind="textField" uuid="da4da7d6-7440-410d-85ad-294025c812c6" x="0" y="-65" width="105" height="20" fontSize="9.0" blankWhenNull="true" vTextAlign="Middle" style="Zebra">
+			<element kind="textField" uuid="da4da7d6-7440-410d-85ad-294025c812c6" x="0" y="0" width="105" height="20" fontSize="9.0" blankWhenNull="true" vTextAlign="Middle" style="Zebra">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				<expression><![CDATA[$F{tipo_item}]]></expression>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Zebra">
@@ -229,7 +229,7 @@ ORDER BY
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="e6221c97-6a13-44f2-9844-4af3eb175b9f" x="105" y="-65" width="225" height="20" fontSize="9.0" blankWhenNull="true" vTextAlign="Middle" style="Zebra">
+			<element kind="textField" uuid="e6221c97-6a13-44f2-9844-4af3eb175b9f" x="105" y="0" width="225" height="20" fontSize="9.0" blankWhenNull="true" vTextAlign="Middle" style="Zebra">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				<expression><![CDATA[$F{descricao}]]></expression>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Zebra">
@@ -239,7 +239,7 @@ ORDER BY
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="e3d93963-79d9-4820-9191-2cae44f84938" x="330" y="-65" width="50" height="20" fontSize="9.0" pattern="#,##0" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
+			<element kind="textField" uuid="e3d93963-79d9-4820-9191-2cae44f84938" x="330" y="0" width="50" height="20" fontSize="9.0" pattern="#,##0" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				<expression><![CDATA[$F{quantidade}]]></expression>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Zebra">
@@ -249,7 +249,7 @@ ORDER BY
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="4c9e4dd6-2bd4-4861-8f5b-6f8e79ed7b4e" x="380" y="-65" width="80" height="20" fontSize="9.0" pattern="R$ #,##0.00" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
+			<element kind="textField" uuid="4c9e4dd6-2bd4-4861-8f5b-6f8e79ed7b4e" x="380" y="0" width="80" height="20" fontSize="9.0" pattern="R$ #,##0.00" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				<expression><![CDATA[$F{valor_unitario}]]></expression>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Zebra">
@@ -259,7 +259,7 @@ ORDER BY
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="1e4d8e57-bc0c-4033-9112-9226f30a9925" x="460" y="-65" width="95" height="20" fontSize="9.0" pattern="R$ #,##0.00" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
+			<element kind="textField" uuid="1e4d8e57-bc0c-4033-9112-9226f30a9925" x="460" y="0" width="95" height="20" fontSize="9.0" pattern="R$ #,##0.00" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle" style="Zebra">
 				<printWhenExpression><![CDATA[$F{con_efetivado}]]></printWhenExpression>
 				<expression><![CDATA[$F{valor_total_item}]]></expression>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2" style="Zebra">
@@ -272,11 +272,15 @@ ORDER BY
 		</band>
 	</detail>
 	<summary height="30">
-		<element kind="staticText" uuid="468d6f95-4424-4f99-a937-e50f55734cc3" x="320" y="-55" width="140" height="30" forecolor="#006699" fontSize="14.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="staticText" uuid="468d6f95-4424-4f99-a937-e50f55734cc3" x="320" y="0" width="140" height="20" forecolor="#006699" fontSize="14.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[Total Geral:]]></text>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="b2488d5e-d8e7-4b7b-94dd-1e2474de90ec" x="460" y="-55" width="95" height="30" forecolor="#006699" fontSize="14.0" pattern="R$ #,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="textField" uuid="b2488d5e-d8e7-4b7b-94dd-1e2474de90ec" x="460" y="0" width="95" height="20" forecolor="#006699" fontSize="14.0" pattern="R$ #,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$V{V_TOTAL_GERAL}]]></expression>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box rightPadding="2"/>
 		</element>
 		<property name="com.jaspersoft.studio.unit.height" value="px"/>
