@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import matheus.bcc.dentalfx.db.entidades.*;
 import matheus.bcc.dentalfx.db.repositorios.AgendaDAL;
 import matheus.bcc.dentalfx.db.repositorios.PessoaDAL;
-import matheus.bcc.dentalfx.db.util.Banco;
+import matheus.bcc.dentalfx.db.util.Backup;
 import matheus.bcc.dentalfx.util.*;
 
 import java.net.URL;
@@ -369,12 +369,12 @@ public class AgendamentoController implements Initializable {
 
     public void onBackup(ActionEvent actionEvent) throws Exception {
         String arquivo = "bdutil/backup/sisdental.sql";
-        Banco.backup(arquivo, "sisdentaldb");
+        Backup.backup(arquivo, "sisdentaldb");
     }
 
     public void onRestore(ActionEvent actionEvent) throws Exception {
         String arquivo = "bdutil/backup/sisdental.sql";
-        Banco.restaurar(arquivo, "sisdentaldb");
+        Backup.restaurar(arquivo, "sisdentaldb");
     }
 
     public void onTopicos(ActionEvent actionEvent) throws Exception {

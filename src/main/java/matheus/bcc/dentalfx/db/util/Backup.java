@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class Banco {
+public class Backup {
     private static String getComando(String baseCommand) {
         boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
         if (isWindows)
@@ -22,7 +22,7 @@ public class Banco {
         comandos.add("--host");
         comandos.add("localhost");
         comandos.add("--port"); comandos.add("5432"); comandos.add("--username");
-        comandos.add("postgres");comandos.add("--format");comandos.add("plain");
+        comandos.add("postgres");comandos.add("--format");comandos.add("custom");
         comandos.add("--blobs");comandos.add("--verbose");comandos.add("--file");
         comandos.add(arquivo);
         comandos.add(database);
