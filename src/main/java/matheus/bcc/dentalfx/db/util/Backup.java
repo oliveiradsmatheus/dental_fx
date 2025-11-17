@@ -44,8 +44,9 @@ public class Backup {
         comandos.add("--host"); comandos.add("localhost");
         comandos.add("--port"); comandos.add("5432");
         comandos.add("--username"); comandos.add("postgres");
-        comandos.add("--format"); comandos.add("custom");
-        comandos.add("--blobs");
+        comandos.add("--format"); comandos.add("plain");
+        comandos.add("--clean");
+        comandos.add("--if-exists");
         comandos.add("--verbose");
 
         comandos.add("--file");
@@ -59,14 +60,14 @@ public class Backup {
     public static boolean restaurar(String arquivo, String database) {
         final List<String> comandos = new ArrayList<>();
 
-        comandos.add(getComando("pg_restore"));
+        comandos.add(getComando("psql"));
 
-        comandos.add("-c");
         comandos.add("--host"); comandos.add("localhost");
         comandos.add("--port"); comandos.add("5432");
         comandos.add("--username"); comandos.add("postgres");
         comandos.add("--dbname"); comandos.add(database);
-        comandos.add("--verbose");
+        comandos.add("--quiet");
+        comandos.add("-f");
 
         comandos.add(new File(arquivo).getAbsolutePath());
 
