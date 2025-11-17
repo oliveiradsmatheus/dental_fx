@@ -368,12 +368,12 @@ public class AgendamentoController implements Initializable {
     }
 
     public void onBackup(ActionEvent actionEvent) throws Exception {
-        String arquivo = "bdutil/backup/sisdental.sql";
+        String arquivo = "backup/sisdental.bkp";
         Backup.backup(arquivo, "sisdentaldb");
     }
 
     public void onRestore(ActionEvent actionEvent) throws Exception {
-        String arquivo = "bdutil/backup/sisdental.sql";
+        String arquivo = "backup/sisdental.bkp";
         Backup.restaurar(arquivo, "sisdentaldb");
     }
 
